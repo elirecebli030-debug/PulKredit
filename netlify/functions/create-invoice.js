@@ -6,8 +6,9 @@ exports.handler = async (event, context) => {
   }
 
   try {
-    // Əgər event.body boşdursa, xəta verməməsi üçün yoxlayırıq
-    if (!event.body) {
+    // ƏGƏR BODY BOŞ GƏLİRSƏ, XƏTA VERMƏSİN DEYƏ YOXLAYIRIQ
+    if (!event.body || event.body.trim() === "") {
+      console.log("XƏTA: Body boş gəldi!");
       return { statusCode: 400, body: JSON.stringify({ error: 'Body is empty' }) };
     }
 
@@ -18,13 +19,8 @@ exports.handler = async (event, context) => {
       return { statusCode: 400, body: JSON.stringify({ error: 'Invalid amount' }) };
     }
 
-    // ... (qalan kod eyni qalır: CLIENT_ID, CLIENT_SECRET, timestamp, payload, signature və s.)
     const CLIENT_ID = process.env.COINPAYMENTS_CLIENT_ID;
     const CLIENT_SECRET = process.env.COINPAYMENTS_CLIENT_SECRET;
-
-    if (!CLIENT_ID || !CLIENT_SECRET) {
-      return { statusCode: 500, body: JSON.stringify({ error: 'API keys missing' }) };
-    }
 
     const timestamp = new Date().toISOString().split('.')[0] + 'Z';
     const method = 'POST';
@@ -53,13 +49,18 @@ exports.handler = async (event, context) => {
 
     const data = await response.json();
 
+    // CoinPayments-dən gələn xətanı loqda görmək üçün
+    if (!response.ok) {
+        console.log("CoinPayments Xətası:", JSON.stringify(data));
+    }
+
     return {
       statusCode: 200,
       body: JSON.stringify(data)
     };
 
   } catch (error) {
-    console.error('Server xətası:', error);
+    console.error('Server daxili xətası:', error.message);
     return { 
       statusCode: 500, 
       body: JSON.stringify({ error: error.message }) 
