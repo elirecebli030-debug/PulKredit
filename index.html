@@ -154,7 +154,6 @@
         payWithCoinpaymentsBtn.innerHTML = '<span class="spinner"></span> Yönləndirilir...';
 
         try {
-          // BİRBAŞA COINPAYMENTS-Ə YOX, ÖZ NETLIFY FUNKSİYANA MÜRACİƏT EDİRİK
           const response = await fetch('/.netlify/functions/create-invoice', {
             method: 'POST',
             headers: {
@@ -163,7 +162,11 @@
             body: JSON.stringify({ amount: amount })
           });
 
-          const data = await response.json();
+          // Əgər serverdən boş cavab gələrsə, xəta verməməsi üçün yoxlayırıq
+          const text = await response.text();
+          if (!text) throw new Error("Server boş cavab qaytardı");
+
+          const data = JSON.parse(text);
 
           if (data && (data.link || data.checkoutLink)) {
             window.location.href = data.link || data.checkoutLink;
