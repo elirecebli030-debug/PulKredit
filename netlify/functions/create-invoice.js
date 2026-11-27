@@ -6,6 +6,11 @@ exports.handler = async (event, context) => {
   }
 
   try {
+    // Əgər event.body boşdursa, xəta verməməsi üçün yoxlayırıq
+    if (!event.body) {
+      return { statusCode: 400, body: JSON.stringify({ error: 'Body is empty' }) };
+    }
+
     const body = JSON.parse(event.body);
     const amount = body.amount;
 
@@ -13,6 +18,7 @@ exports.handler = async (event, context) => {
       return { statusCode: 400, body: JSON.stringify({ error: 'Invalid amount' }) };
     }
 
+    // ... (qalan kod eyni qalır: CLIENT_ID, CLIENT_SECRET, timestamp, payload, signature və s.)
     const CLIENT_ID = process.env.COINPAYMENTS_CLIENT_ID;
     const CLIENT_SECRET = process.env.COINPAYMENTS_CLIENT_SECRET;
 
@@ -23,7 +29,6 @@ exports.handler = async (event, context) => {
     const timestamp = new Date().toISOString().split('.')[0] + 'Z';
     const method = 'POST';
     const host = 'a-api.coinpayments.net';
-    // Rəsmi sənədlərdəki endpoint (v2 versiyası)
     const path = '/api/v2/merchant/invoices'; 
     
     const payload = JSON.stringify({ 
@@ -32,7 +37,6 @@ exports.handler = async (event, context) => {
       description: 'Payment for services' 
     });
 
-    // RƏSMİ SƏNƏDLƏRƏ UYĞUN İMZA FORMATI (BOM simvolu ilə)
     const signatureString = `\ufeff${method}https://${host}${path}${CLIENT_ID}${timestamp}${payload}`;
     const signature = crypto.createHmac('sha256', CLIENT_SECRET).update(signatureString, 'utf8').digest('base64');
 
