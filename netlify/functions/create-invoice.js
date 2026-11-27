@@ -1,7 +1,6 @@
 const crypto = require('crypto');
 
 exports.handler = async (event, context) => {
-  // Yalnız POST sorğularına icazə veririk
   if (event.httpMethod !== 'POST') {
     return { statusCode: 405, body: 'Method Not Allowed' };
   }
@@ -14,7 +13,6 @@ exports.handler = async (event, context) => {
       return { statusCode: 400, body: JSON.stringify({ error: 'Invalid amount' }) };
     }
 
-    // API açarları (Bunları Netlify Environment Variables-dan oxuyuruq!)
     const CLIENT_ID = process.env.COINPAYMENTS_CLIENT_ID;
     const CLIENT_SECRET = process.env.COINPAYMENTS_CLIENT_SECRET;
 
@@ -24,8 +22,9 @@ exports.handler = async (event, context) => {
 
     const timestamp = new Date().toISOString().split('.')[0] + 'Z';
     const method = 'POST';
-    const path = '/api/v1/merchant/invoices';
     const host = 'a-api.coinpayments.net';
+    // Rəsmi sənədlərdəki endpoint (v2 versiyası)
+    const path = '/api/v2/merchant/invoices'; 
     
     const payload = JSON.stringify({ 
       amount: amount, 
@@ -33,10 +32,10 @@ exports.handler = async (event, context) => {
       description: 'Payment for services' 
     });
 
-    const signatureString = `${method}\n${host}\n${path}\n${timestamp}\n${payload}`;
-    const signature = crypto.createHmac('sha256', CLIENT_SECRET).update(signatureString).digest('base64');
+    // RƏSMİ SƏNƏDLƏRƏ UYĞUN İMZA FORMATI (BOM simvolu ilə)
+    const signatureString = `\ufeff${method}https://${host}${path}${CLIENT_ID}${timestamp}${payload}`;
+    const signature = crypto.createHmac('sha256', CLIENT_SECRET).update(signatureString, 'utf8').digest('base64');
 
-    // CoinPayments API-yə sorğu
     const response = await fetch(`https://${host}${path}`, {
       method: method,
       headers: {
@@ -50,7 +49,6 @@ exports.handler = async (event, context) => {
 
     const data = await response.json();
 
-    // CoinPayments-dən gələn cavabı frontend-ə qaytarırıq
     return {
       statusCode: 200,
       body: JSON.stringify(data)
