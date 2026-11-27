@@ -154,17 +154,22 @@
         payWithCoinpaymentsBtn.innerHTML = '<span class="spinner"></span> Yönləndirilir...';
 
         try {
+          // DÜZGÜN FORMATDA GÖNDƏRİRİK
+          const payload = { amount: amount };
+          
           const response = await fetch('/.netlify/functions/create-invoice', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ amount: amount })
+            body: JSON.stringify(payload) 
           });
 
-          // Əgər serverdən boş cavab gələrsə, xəta verməməsi üçün yoxlayırıq
+          // Cavabı YOXLAYIRIQ
           const text = await response.text();
-          if (!text) throw new Error("Server boş cavab qaytardı");
+          if (!text) {
+            throw new Error("Serverdən boş cavab gəldi");
+          }
 
           const data = JSON.parse(text);
 
@@ -172,7 +177,6 @@
             window.location.href = data.link || data.checkoutLink;
           } else {
             alert('Xəta: Faktura yaradıla bilmədi. Zəhmət olmasa yenidən cəhd edin.');
-            console.error('API Cavabı:', data);
             payWithCoinpaymentsBtn.disabled = false;
             payWithCoinpaymentsBtn.innerHTML = 'CoinPayments ilə Ödə <span style="font-size:18px;">→</span>';
           }
