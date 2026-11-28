@@ -1,193 +1,100 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="az">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>CoinPayments · Secure Checkout</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ödəniş Et - CoinPayments</title>
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; }
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
-
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', system-ui, -apple-system, sans-serif; }
+    
     body {
       min-height: 100vh;
       background: #070b14;
-      display: flex; align-items: center; justify-content: center; padding: 20px 16px;
-      position: relative; overflow-x: hidden; color: #fff;
-    }
-
-    .bg-grid {
-      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-      background-image: linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
-      background-size: 40px 40px; z-index: 0; pointer-events: none;
-    }
-    .glow-top {
-      position: absolute; top: -20%; left: 50%; transform: translateX(-50%);
-      width: 800px; height: 400px; background: radial-gradient(ellipse, rgba(247,147,26,0.15) 0%, transparent 70%);
-      filter: blur(60px); z-index: 0; pointer-events: none;
+      display: flex; 
+      align-items: center; 
+      justify-content: center; 
+      padding: 20px;
+      color: #fff;
     }
 
     .card {
-      max-width: 520px; width: 100%;
+      max-width: 450px; 
+      width: 100%;
       background: #0c1421;
       border-radius: 24px;
       box-shadow: 0 40px 100px -20px rgba(0,0,0,0.9), 0 0 0 1px rgba(255,255,255,0.05);
-      padding: 32px 28px 28px;
-      position: relative; overflow: hidden; z-index: 1;
-    }
-    .card::before {
-      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
-      background: linear-gradient(90deg, transparent, rgba(247,147,26,0.5), transparent);
+      padding: 40px 30px;
+      text-align: center;
+      position: relative;
     }
 
-    .brand { display: flex; flex-direction: column; align-items: center; gap: 8px; margin-bottom: 20px; }
-    .brand-logo-container { display: flex; align-items: center; gap: 10px; }
-    .brand-logo { height: 32px; width: auto; }
-    .brand-name { font-size: 22px; font-weight: 800; letter-spacing: -0.5px; }
+    .brand-name { 
+      font-size: 24px; 
+      font-weight: 800; 
+      margin-bottom: 20px; 
+      letter-spacing: -0.5px;
+    }
     .brand-name span { color: #f7931a; }
-    
-    .security-badges { display: flex; justify-content: center; gap: 8px; margin-bottom: 20px; }
-    .sec-badge { display: flex; align-items: center; gap: 4px; font-size: 9.5px; font-weight: 600; color: #00d4aa; background: rgba(0, 212, 170, 0.08); padding: 4px 8px; border-radius: 6px; border: 1px solid rgba(0, 212, 170, 0.15); }
-    .sec-badge svg { width: 12px; height: 12px; fill: #00d4aa; }
 
-    .amount-box {
-      background: linear-gradient(180deg, rgba(19,31,48,0.6) 0%, rgba(12,20,33,0.6) 100%);
-      border-radius: 16px; padding: 20px; margin-bottom: 24px;
-      border: 1px solid rgba(255,255,255,0.06); position: relative;
+    .price-display {
+      font-size: 48px;
+      font-weight: 800;
+      color: #fff;
+      margin-bottom: 30px;
+      letter-spacing: -2px;
     }
-    .amount-label { font-size: 11px; font-weight: 600; color: #6b8099; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 6px; }
-    .amount-row { display: flex; align-items: center; gap: 8px; }
-    .currency { font-size: 28px; font-weight: 500; color: #4a5c72; }
-    .amount-input { background: transparent; border: none; outline: none; color: #fff; font-size: 48px; font-weight: 800; letter-spacing: -2px; width: 100%; padding: 0; font-family: inherit; }
-    .amount-input::placeholder { color: rgba(255,255,255,0.1); }
-    
-    .quick-amounts { display: flex; gap: 8px; margin-top: 12px; }
-    .quick-amounts button { flex: 1; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); color: #8aa0b8; font-size: 12px; font-weight: 600; padding: 8px 0; border-radius: 8px; cursor: pointer; transition: all 0.2s; }
-    .quick-amounts button:hover { background: rgba(247,147,26,0.1); border-color: rgba(247,147,26,0.3); color: #f7931a; }
+    .price-display span { color: #f7931a; font-size: 32px; }
 
-    .btn { width: 100%; padding: 16px; background: linear-gradient(180deg, #f7931a 0%, #e8820a 100%); color: #0c1421; border: none; border-radius: 12px; font-size: 15px; font-weight: 800; cursor: pointer; transition: all 0.2s; box-shadow: 0 4px 14px rgba(247,147,26,0.3); display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: 10px;}
-    .btn:hover { background: linear-gradient(180deg, #ffa53a 0%, #f7931a 100%); transform: translateY(-1px); }
-    .btn:active { transform: translateY(1px); }
-    .btn:disabled { opacity: 0.5; pointer-events: none; }
-    
-    .view { display: none; }
-    .view.active { display: block; }
+    .form-container {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
 
-    .footer-note { text-align: center; font-size: 11px; color: #4a5c72; margin-top: 24px; display: flex; flex-direction: column; gap: 8px; }
-    .footer-logos { display: flex; justify-content: center; gap: 16px; align-items: center; opacity: 0.4; margin-bottom: 4px; }
-    .footer-logos img { height: 16px; filter: grayscale(100%); }
-    .spinner { display: inline-block; width: 16px; height: 16px; border: 2px solid rgba(0,0,0,0.2); border-radius: 50%; border-top-color: #0c1421; animation: spin 0.8s linear infinite; }
-    @keyframes spin { to { transform: rotate(360deg); } }
+    /* Düymənin özünü bir az böyüdürük ki, gözəl görünsün */
+    .form-container input[type="image"] {
+      width: 100% !important;
+      max-width: 280px;
+      border-radius: 12px;
+      transition: transform 0.2s;
+      cursor: pointer;
+    }
+    
+    .form-container input[type="image"]:hover {
+      transform: translateY(-2px);
+    }
+
+    .note {
+      font-size: 12px;
+      color: #6b8099;
+      margin-top: 20px;
+      line-height: 1.5;
+    }
   </style>
 </head>
 <body>
-  <div class="bg-grid"></div>
-  <div class="glow-top"></div>
 
   <div class="card">
-    <div class="brand">
-      <div class="brand-logo-container">
-        <img class="brand-logo" src="https://cdn.brandfetch.io/coinpayments.net/logo?c=1id7R1U2Xq5vG0" alt="CoinPayments" onerror="this.style.display='none'">
-        <div class="brand-name">Coin<span>Payments</span></div>
-      </div>
+    <div class="brand-name">Coin<span>Payments</span></div>
+    
+    <div class="price-display"><span>$</span>100.00</div>
+    
+    <div class="form-container">
+      
+      <!-- SENIN YARATDIĞIN COINPAYMENTS FORMASI BURADADIR -->
+      <form action="https://a-api.coinpayments.net/api/v1/invoices/button" method="post">
+        <input type="hidden" name="action" value="checkout" />
+        <input type="hidden" name="data" value="QuwxBMvQPaSFxNjMYN3/gFaXngrf92EEFEq3FmoAQRWTXO7kCksezWtOdUWXXdEM/vvjjZcYKRJ7nfeAOnNUCkViPyl7RxvSN2Vjj1OCVlXf8j9eNJYnR46WMizH+EWIGuKmD1acNxeNe37MnGTQ8SClYo1WFY+cEo2q9EDs49F7MnUXqyifr9tK1KtxXRK/kZWG6qmM/P0TSb2MPSqMIixRjCQ8NZnjKmwZhJlpiNwngs1YXVxbVotkqxD4UER3swQTT6Asa7mT3zh8eteTNkR2SbMxAY2SVrkK5WTt9lxOJl2gGRLm3C8Gkvu3DKsHo+OfFfMFSOxcAPHIgV5V2lYtwkwE2yUgNZAUqw2fA/MzkWWzo68pW+SBL5Cs48hknROlXa1mMEb6Vop1lKvB72mZ+Kh8JvF43tkSOLM27N+jgMeM1ZttU/RHsc3Nx1ME5E1ONqlbZQkz0gZDhMxXcGDhSHTOfDANaFvQatJ4IgqAJk0+mgxdfir9sFuK/wJviGQB44ISSiRtM76fssEdkYMDm6BYxh24C1/Nlz+Mg5HdT02vLsdUBP5iXK6H23FHPYFAFtDwgJnKC7UMEwUZ23ksZaSnvaG3XObyNtXCt3d5y+mD8oiDBDgIL4O4ArUDUOohTSJ0IBIpUWeFba//kecRZhTQkEfCxDI2sFxTdgDIyC9YjKelKrv62Dvp7VzWaUKDsN2P33EAel9AFYo96EbDIdAPQ8yAWQdYXW5M/s8jQ64bylPaZ79cUAgyrykXGqwli4YCsLf1sB4KIxp+KjXkoqWZA5nxJ6kDOskvFcM4q4qZ4KI+iWCCKoDYRaadNWa8IkxE4ExGErVXw0wj+60Lxp4xKZzfaSitrcivqzrnOwKrc5huD5jFpvhcBzYqT6bfru2dBIWNu8aNOSaiAS9ZOaMs4nVqQRbCqntDjFfCUsCiEeDZyrWangA8G6DzrC2VvITWQF1oCjk69T6nmIkfUcBd0OB3nDVqIXnT3fgo1BafssE3UpNWvs6XzDKo" />
+        <input type="image" src="https://a-api.coinpayments.net/checkout_buttons/pay_black_middle.svg" name="submit" alt="Buy Now with CoinPayments.net">
+      </form>
+      <!-- FORMA BITDI -->
+
     </div>
 
-    <div class="security-badges">
-      <div class="sec-badge"><svg viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 10.99h7c-.53 4.12-3.28 7.79-7 8.94V12H5V6.3l7-3.11v8.8z"/></svg> SSL</div>
-      <div class="sec-badge"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg> Verified</div>
-    </div>
-
-    <div id="step1View" class="view active">
-      <div class="amount-box">
-        <div class="amount-label">Payment amount (USD)</div>
-        <div class="amount-row">
-          <span class="currency">$</span>
-          <input type="text" class="amount-input" id="amountInput" placeholder="0.00" inputmode="decimal">
-        </div>
-        <div class="quick-amounts">
-          <button data-val="50">$50</button>
-          <button data-val="100">$100</button>
-          <button data-val="500">$500</button>
-          <button data-val="1000">$1000</button>
-        </div>
-      </div>
-
-      <button class="btn" id="payWithCoinpaymentsBtn">CoinPayments ilə Ödə <span style="font-size:18px;">→</span></button>
-    </div>
-
-    <div class="footer-note">
-      <div class="footer-logos">
-        <img src="https://cdn.brandfetch.io/coinpayments.net/logo?c=1id7R1U2Xq5vG0" alt="CoinPayments">
-      </div>
-      <div>© 2024 CoinPayments Inc. All rights reserved.</div>
+    <div class="note">
+      Ödəniş etmək üçün yuxarıdakı düyməyə basın.<br>Sizi təhlükəsiz CoinPayments səhifəsinə yönləndirəcək.
     </div>
   </div>
 
-  <script>
-    (function() {
-      const amountInput = document.getElementById('amountInput');
-      const payWithCoinpaymentsBtn = document.getElementById('payWithCoinpaymentsBtn');
-
-      amountInput.addEventListener('input', function(e) {
-        let val = e.target.value.replace(/[^0-9.]/g, '');
-        const parts = val.split('.');
-        if (parts.length > 2) val = parts[0] + '.' + parts.slice(1).join('');
-        if (val.includes('.')) { const [int, dec] = val.split('.'); if (dec.length > 2) val = int + '.' + dec.slice(0, 2); }
-        e.target.value = val;
-      });
-
-      document.querySelectorAll('.quick-amounts button').forEach(btn => {
-        btn.addEventListener('click', function() {
-          amountInput.value = this.dataset.val;
-        });
-      });
-
-      payWithCoinpaymentsBtn.addEventListener('click', async function() {
-        const amount = parseFloat(amountInput.value);
-        
-        if (!amount || amount <= 0) {
-          amountInput.style.borderBottom = '1px solid #ff6b6b';
-          setTimeout(() => amountInput.style.borderBottom = 'none', 2000);
-          return;
-        }
-
-        payWithCoinpaymentsBtn.disabled = true;
-        payWithCoinpaymentsBtn.innerHTML = '<span class="spinner"></span> Yönləndirilir...';
-
-        try {
-          // DÜZGÜN FORMATDA GÖNDƏRİRİK
-          const payload = { amount: amount };
-          
-          const response = await fetch('/.netlify/functions/create-invoice', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(payload) 
-          });
-
-          // Cavabı YOXLAYIRIQ
-          const text = await response.text();
-          if (!text) {
-            throw new Error("Serverdən boş cavab gəldi");
-          }
-
-          const data = JSON.parse(text);
-
-          if (data && (data.link || data.checkoutLink)) {
-            window.location.href = data.link || data.checkoutLink;
-          } else {
-            alert('Xəta: Faktura yaradıla bilmədi. Zəhmət olmasa yenidən cəhd edin.');
-            payWithCoinpaymentsBtn.disabled = false;
-            payWithCoinpaymentsBtn.innerHTML = 'CoinPayments ilə Ödə <span style="font-size:18px;">→</span>';
-          }
-        } catch (error) {
-          console.error('Xəta:', error);
-          alert('Bağlantı xətası baş verdi. Zəhmət olmasa yenidən cəhd edin.');
-          payWithCoinpaymentsBtn.disabled = false;
-          payWithCoinpaymentsBtn.innerHTML = 'CoinPayments ilə Ödə <span style="font-size:18px;">→</span>';
-        }
-      });
-    })();
-  </script>
 </body>
 </html>
